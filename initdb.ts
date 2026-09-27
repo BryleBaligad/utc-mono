@@ -1,0 +1,42 @@
+import { Database } from "bun:sqlite"
+import { log } from "./log";
+
+export async function init() {
+    const db = new Database("utc.db")
+    
+    try {
+        let query: any = db.query("SELECT COUNT(*) AS 'value' FROM sqlite_master WHERE type='table' AND name='accounts'").get();
+        if (query.value == 0) {
+            db.run(`
+            CREATE TABLE accounts (
+                id INTEGER PRIMARY KEY,
+                username TEXT NOT NULL UNIQUE,
+                password TEXT NOT NULL,
+                role TEXT NOT NULL
+            )`)
+            log("Created accounts table")
+        }
+    } catch (error) {
+        console.error(error)
+    }
+    
+    try {
+        let adminQuery = db.query(`SELECT * FROM accounts WHERE username = "admin"`).get(1)
+        if (!adminQuery) {
+            let insertQuery = db.query(`INSERT INTO accounts (username, password, role)
+                VALUES ("admin", ?, "admin")
+            `)
+    
+            if (Bun.env.ADMINPASSWORD) {
+                let password = await Bun.password.hash(Bun.env.ADMINPASSWORD)
+                insertQuery.run(password)
+                log("Created admin account")
+            } else {
+                log("ERROR: Missing admin password in env")
+                process.exit(0)
+            }
+        }
+    } catch (error) {
+        console.error(error)
+    }
+}
