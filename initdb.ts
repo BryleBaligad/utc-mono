@@ -12,7 +12,8 @@ export async function init() {
                 id INTEGER PRIMARY KEY,
                 username TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
-                role TEXT NOT NULL
+                role TEXT NOT NULL,
+                activated BOOLEAN NOT NULL
             )`)
             log("Created accounts table")
         }
@@ -23,8 +24,8 @@ export async function init() {
     try {
         let adminQuery = db.query(`SELECT * FROM accounts WHERE username = "admin"`).get(1)
         if (!adminQuery) {
-            let insertQuery = db.query(`INSERT INTO accounts (username, password, role)
-                VALUES ("admin", ?, "admin")
+            let insertQuery = db.query(`INSERT INTO accounts (username, password, role, activated)
+                VALUES ("admin", ?, "admin", TRUE)
             `)
     
             if (Bun.env.ADMINPASSWORD) {
