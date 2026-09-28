@@ -1,10 +1,9 @@
-import { Database } from "bun:sqlite"
 import { log } from "./log";
+import { getDb } from "./db";
 
 export async function init() {
-    const db = new Database("utc.db")
-    db.run("PRAGMA journal_mode = WAL;");
-    
+    const db = getDb();
+
     try {
         let query: any = db.query("SELECT COUNT(*) AS 'value' FROM sqlite_master WHERE type='table' AND name='accounts'").get();
         if (query.value == 0) {
