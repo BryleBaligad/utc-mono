@@ -1,4 +1,4 @@
-import { MailProviderError, type MailProvider } from "./mailprovider";
+import { MailProviderError, type MailProvider } from "./mailprovider"
 
 type BrevoOptions = {
     subject: string
@@ -28,9 +28,9 @@ class Brevo implements MailProvider {
             throw new MailProviderError("Unauthenticated")
         }
 
-        let reqBody = JSON.stringify(options);
+        let reqBody = JSON.stringify(options)
 
-        let reqHeaders = new Headers();
+        let reqHeaders = new Headers()
         reqHeaders.append("accept", "application/json")
         reqHeaders.append("content-type", "application/json")
         reqHeaders.append("api-key", Bun.env.brevo)
@@ -39,8 +39,8 @@ class Brevo implements MailProvider {
             headers: reqHeaders,
             body: reqBody,
             method: "POST"
-        });
+        })
 
-        return response;
+        return response
     }
 }

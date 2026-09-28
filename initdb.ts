@@ -1,11 +1,11 @@
-import { log } from "./log";
-import { getDb } from "./db";
+import { log } from "./log"
+import { getDb } from "./db"
 
 export async function init() {
-    const db = getDb();
+    const db = getDb()
 
     try {
-        let query: any = db.query("SELECT COUNT(*) AS 'value' FROM sqlite_master WHERE type='table' AND name='accounts'").get();
+        let query: any = db.query("SELECT COUNT(*) AS 'value' FROM sqlite_master WHERE type='table' AND name='accounts'").get()
         if (query.value == 0) {
             db.run(`
             CREATE TABLE accounts (

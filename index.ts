@@ -1,9 +1,9 @@
 // API v1
 
-import { init } from "./initdb";
+import { init } from "./initdb"
 import { log } from "./log"
 
-await init();
+await init()
 
 Bun.serve({
     port: 47838,
