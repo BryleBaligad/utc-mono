@@ -3,6 +3,7 @@ import { log } from "./log";
 
 export async function init() {
     const db = new Database("utc.db")
+    db.run("PRAGMA journal_mode = WAL;");
     
     try {
         let query: any = db.query("SELECT COUNT(*) AS 'value' FROM sqlite_master WHERE type='table' AND name='accounts'").get();
