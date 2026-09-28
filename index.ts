@@ -5,8 +5,8 @@ import { log } from "./log"
 
 await init()
 
-Bun.serve({
-    port: 47838,
+let server = Bun.serve({
+    port: ("U".charCodeAt(0) * "T".charCodeAt(0) * "C".charCodeAt(0)) / 10,
     routes: {
         "/api/v1/heartbeat": () => {
             return new Response("Success")
@@ -14,4 +14,4 @@ Bun.serve({
     }
 })
 
-log(`Started API v1 on port ${("U".charCodeAt(0) * "T".charCodeAt(0) * "C".charCodeAt(0)) / 10}`)
+log(`Started API v1 on port ${server.port}`)
