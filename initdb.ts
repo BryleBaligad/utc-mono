@@ -14,7 +14,9 @@ export async function init() {
                 password TEXT NOT NULL,
                 role TEXT NOT NULL,
                 activation_code TEXT,
-                activated BOOLEAN NOT NULL
+                activated BOOLEAN NOT NULL,
+                created_at TEXT NOT NULL,
+                activated_at TEXT
             )`)
             log("Created accounts table")
         }
@@ -25,13 +27,13 @@ export async function init() {
     try {
         let adminQuery = db.query(`SELECT * FROM accounts WHERE username = "admin"`).get(1)
         if (!adminQuery) {
-            let insertQuery = db.query(`INSERT INTO accounts (username, password, role, activated)
-                VALUES ("admin", ?, "admin", TRUE)
+            let insertQuery = db.query(`INSERT INTO accounts (username, password, role, activated, created_at, activated_at)
+                VALUES ("admin", ?, "admin", TRUE, ?, ?)
             `)
     
             if (Bun.env.ADMINPASSWORD) {
                 let password = await Bun.password.hash(Bun.env.ADMINPASSWORD)
-                insertQuery.run(password)
+                insertQuery.run(password, Date.now(), Date.now())
                 log("Created admin account")
             } else {
                 log("ERROR: Missing admin password in env")

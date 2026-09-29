@@ -14,7 +14,7 @@ type BrevoOptions = {
     textContent?: string
 }
 
-class Brevo implements MailProvider {
+export class Brevo implements MailProvider {
     async send(options: BrevoOptions): Promise<void | string | any> {
         if (!options.htmlContent && !options.textContent) {
             throw new MailProviderError("MissingBody")
