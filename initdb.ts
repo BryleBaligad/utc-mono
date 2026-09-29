@@ -55,6 +55,7 @@ export async function init() {
                 ip_address TEXT NOT NULL,
                 expiry TEXT NOT NULL,
                 expired BOOLEAN NOT NULL,
+                created_at TEXT NOT NULL,
 
                 FOREIGN KEY (account_id) REFERENCES accounts (id)
             )`)
