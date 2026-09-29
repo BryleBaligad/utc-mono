@@ -13,6 +13,7 @@ export async function init() {
                 username TEXT NOT NULL UNIQUE,
                 password TEXT NOT NULL,
                 role TEXT NOT NULL,
+                activation_code TEXT,
                 activated BOOLEAN NOT NULL
             )`)
             log("Created accounts table")
