@@ -3,6 +3,7 @@
 import { init } from "./initdb"
 import { log } from "./log"
 import { accountsRouter } from "./routes/accounts"
+import { activation } from "./routes/activation"
 
 await init()
 
@@ -12,7 +13,8 @@ export let server = Bun.serve({
         "/api/v1/heartbeat": () => {
             return new Response("Success")
         },
-        "/api/v1/accounts": accountsRouter
+        "/api/v1/accounts": accountsRouter,
+        "/api/v1/accounts/activation": activation
     }
 })
 
