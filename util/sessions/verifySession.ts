@@ -20,11 +20,11 @@ export function verifySession(sessionToken: string | null, ip: string): boolean 
 
     let sessionGeneratedIP = db.query("SELECT ip_address FROM sessions WHERE token = ?").get(sessionToken)
     if (sessionGeneratedIP != ip) {
-        db.query("INSERT INTO sessions(expired) VALUES (TRUE) WHERE token = ?").run(sessionToken)
+        db.query("INSERT INTO sessions (expired) VALUES (TRUE) WHERE token = ?").run(sessionToken)
         return false
     }
 
     // Extend expiry by 15 mins (900000ms)
-    db.query("INSERT INTO sessions(expiry) VALUES (?)").run(Date.now() + 900000)
+    db.query("INSERT INTO sessions (expiry) VALUES (?)").run(Date.now() + 900000)
     return true
 }
