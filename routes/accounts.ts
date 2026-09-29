@@ -1,4 +1,5 @@
 import { getDb } from "../db"
+import { censor, log } from "../log"
 import { Brevo } from "../util/email/brevo"
 import { sendActivationEmail } from "../util/email/sendActivationEmail"
 import { getIPFromRequest } from "../util/getIPFromRequest"
@@ -42,6 +43,11 @@ async function accountsPOST(req: Bun.BunRequest): Promise<Response> {
         // Body _should_ be from registration form here; no role and pre-activation
         // username is assumed to be an email address
         if (!body.activated && !body.role) {
+            let isExists = db.query(`SELECT COUNT(*) FROM accounts WHERE username = ?`).get(body.username);
+            if (isExists != 0) {
+                return new Response("409 Conflict", { status: 409 })
+            }
+
             db.query(`
                 INSERT INTO accounts (
                     username, 
@@ -59,6 +65,8 @@ async function accountsPOST(req: Bun.BunRequest): Promise<Response> {
                     ?
                 )`)
             .run(body.username, password, activationCode, Date.now())
+
+            log(`${censor(body.username, 2)} created customer account`)
 
             let account: any = db.query("SELECT * FROM accounts WHERE username = ?").get(body.username);
 
