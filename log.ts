@@ -4,7 +4,7 @@ export function log(message: string) {
 }
 
 export function censor(str: string, n: number, maskChar = '*') {
-    const kept = str.slice(0, n);
-    const censored = str.slice(n).replace(/./g, maskChar);
-    return kept + censored;
+    const kept = str.slice(0, n)
+    const censored = str.slice(n).replace(/./g, maskChar)
+    return kept + censored
 }

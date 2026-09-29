@@ -1,5 +1,5 @@
-import { Brevo } from "./brevo";
-import type { MailProvider } from "./mailprovider";
+import { Brevo } from "./brevo"
+import type { MailProvider } from "./mailprovider"
 
 export async function sendActivationEmail(email: string, activationCode: string, provider: MailProvider) {
     let emailContent = (await Bun.file("./static/mail/activation.html").text())

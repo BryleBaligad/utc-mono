@@ -18,7 +18,7 @@ export async function accountsRouter(req: Bun.BunRequest): Promise<Response> {
 async function accountsPOST(req: Bun.BunRequest): Promise<Response> {
     let db = getDb()
 
-    let role;
+    let role
     let sessionToken = req.cookies.get("UTC-Session")
     if (verifySession(sessionToken, getIPFromRequest(req))) {
         sessionToken = sessionToken as string
@@ -43,7 +43,7 @@ async function accountsPOST(req: Bun.BunRequest): Promise<Response> {
         // Body _should_ be from registration form here; no role and pre-activation
         // username is assumed to be an email address
         if (!body.activated && !body.role) {
-            let isExists = db.query(`SELECT COUNT(*) FROM accounts WHERE username = ?`).get(body.username);
+            let isExists = db.query(`SELECT COUNT(*) FROM accounts WHERE username = ?`).get(body.username)
             if (isExists != 0) {
                 return new Response("409 Conflict", { status: 409 })
             }
@@ -68,9 +68,9 @@ async function accountsPOST(req: Bun.BunRequest): Promise<Response> {
 
             log(`${censor(body.username, 2)} created customer account`)
 
-            let account: any = db.query("SELECT * FROM accounts WHERE username = ?").get(body.username);
+            let account: any = db.query("SELECT * FROM accounts WHERE username = ?").get(body.username)
 
-            sendActivationEmail(body.username, activationCode, new Brevo());
+            sendActivationEmail(body.username, activationCode, new Brevo())
 
             return new Response(JSON.stringify(account), { 
                 headers: {

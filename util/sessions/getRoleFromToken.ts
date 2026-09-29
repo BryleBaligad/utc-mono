@@ -6,7 +6,7 @@ import { getDb } from "../../db"
  * @returns Blank string if token or account doesn't exist, role if found
  */
 export function getRoleFromToken(sessionToken: string): string {
-    let db = getDb();
+    let db = getDb()
     let accountId = db.query("SELECT account_id FROM sessions WHERE token = ?").get(sessionToken) as string | null
     if (!accountId) {
         return ""
