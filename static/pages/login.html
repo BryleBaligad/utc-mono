@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    .bigtext {
+        font-size: x-large;
+        font-weight: bold;
+    }
+
+    .label {
+        font-size: smaller;
+        display: inline-block;
+        margin-top: 8px;
+    }
+</style>
+<body>
+    <span class="bigtext">Log in</span><br><br>
+    <form id="loginForm" onsubmit="handleLogin(); return false;">
+        <label class="label" for="usernameInput">Username</label><br>
+        <input id="usernameInput" name="username" required><br>
+    
+        <label class="label" for="passwordInput">Password</label><br>
+        <input id="passwordInput" name="password" type="password" required><br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        let loginCalled = false;
+        function handleLogin() {
+            if (loginCalled) return;
+            loginCalled = true;
+
+            let formData = new FormData(document.getElementById("loginForm"));
+        }
+    </script>
+</body>
+</html>

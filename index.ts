@@ -10,6 +10,15 @@ await init()
 export let server = Bun.serve({
     port: ("U".charCodeAt(0) * "T".charCodeAt(0) * "C".charCodeAt(0)) / 10,
     routes: {
+        // static routes
+        "/": () => {
+            return new Response(Bun.file("./static/index.html"))
+        },
+        "/*": {
+            dir: "./static"
+        },
+
+        // api routes
         "/api/v1/heartbeat": () => {
             return new Response("Success")
         },
