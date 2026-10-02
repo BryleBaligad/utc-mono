@@ -1,6 +1,7 @@
 import { getDb } from "../db"
 import { censor, log } from "../log"
 import { getIPFromRequest } from "../util/getIPFromRequest"
+import { getRoleFromToken } from "../util/sessions/getRoleFromToken"
 import { verifySession } from "../util/sessions/verifySession"
 import type { SessionsPOSTRequest } from "./sessions.types"
 
@@ -10,6 +11,8 @@ export async function sessionsRouter(req: Bun.BunRequest): Promise<Response> {
             return sessionsGET(req)
         case "POST":
             return sessionsPOST(req)
+        case "DELETE":
+            return sessionsDELETE(req)
     }
     return new Response("400 Bad Request", { status: 400 })
 }
@@ -26,10 +29,27 @@ async function sessionsGET(req: Bun.BunRequest): Promise<Response> {
             sameSite: "lax"
         })
 
-        return new Response("200 OK")
+        return Response.json({ role: getRoleFromToken(sessionToken) })
     }
 
     return new Response("401 Unauthorized", { status: 401 })
+}
+
+async function sessionsDELETE(req: Bun.BunRequest): Promise<Response> {
+    let db = getDb()
+
+    let sessionToken = req.cookies.get("UTC-Session")
+    if (verifySession(sessionToken, getIPFromRequest(req))) {
+        sessionToken = sessionToken as string
+
+        db.query("UPDATE sessions SET expired = TRUE WHERE token = ?").run(sessionToken)
+
+        req.cookies.delete("UTC-Session")
+
+        return new Response("200 OK")
+    }
+
+    return new Response("400 Bad Request", { status: 400 })
 }
 
 async function sessionsPOST(req: Bun.BunRequest): Promise<Response> {
@@ -43,7 +63,7 @@ async function sessionsPOST(req: Bun.BunRequest): Promise<Response> {
             return new Response("404 Not Found", { status: 404 })
         }
 
-        if (!Bun.password.verify(body.password, account.password)) {
+        if (!(await Bun.password.verify(body.password, account.password))) {
             return new Response("401 Unauthorized", { status: 401 })
         }
 
@@ -76,7 +96,7 @@ async function sessionsPOST(req: Bun.BunRequest): Promise<Response> {
 
         log(`${censor(body.username, 2)} logged in`)
 
-        return new Response("200 OK")
+        return Response.json({ role: getRoleFromToken(newSessionToken) })
     }
 
     return new Response("400 Bad Request", { status: 400 })

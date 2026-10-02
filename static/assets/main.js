@@ -24,27 +24,83 @@ function generateSidebar(list) {
         itemDiv.appendChild(iconImg)
         itemDiv.appendChild(labelSpan)
 
-        itemDiv.onclick = () => {
+        itemDiv.onmousedown = () => {
             selectPage(listItem.page, itemDiv);
         }
 
-        sidebar.appendChild(itemDiv)
-
         if (listItem.title) {
-            document.getElementById("page-label").innerText = listItem.title;
+            itemDiv.setAttribute("data-page-label", listItem.title);
+
+            if (listItem.selected) {
+                document.getElementById("page-label").innerText = listItem.title
+            }
+        }
+
+        sidebar.appendChild(itemDiv)
+    }
+}
+
+function generateSidebarByRole(role) {
+    switch (role) {
+        case "": {
+            generateSidebar([
+                {
+                    icon: "Door in",
+                    label: "Log in",
+                    page: "login.html",
+                    title: "Dashboard Login",
+                    selected: true
+                }
+            ])
+            break;
+        }
+
+        case "admin": {
+            generateSidebar([
+                {
+                    icon: "House",
+                    label: "Home",
+                    page: "home.html",
+                    title: "Dashboard Home",
+                    selected: true
+                },
+                {
+                    icon: "Group",
+                    label: "Accounts",
+                    page: "accounts.html",
+                    title: "Account Management"
+                },
+                {
+                    icon: "Car",
+                    label: "Vehicles",
+                    page: "vehicles.html",
+                    title: "Vehicle Management"
+                },
+                {
+                    icon: "Map",
+                    label: "Trips",
+                    page: "trips.html",
+                    title: "Trip Management"
+                },
+                {
+                    icon: "Door Out",
+                    label: "Log out",
+                    page: "logout.html",
+                    title: "Log Out"
+                },
+            ])
+            break;
         }
     }
 }
 
-generateSidebar([
-    {
-        icon: "Door in",
-        label: "Log in",
-        page: "login.html",
-        title: "Dashboard Login",
-        selected: true
+fetch("/api/v1/sessions").then(async res => {
+    if (res.status == 200) {
+        generateSidebarByRole((await res.json()).role)
+    } else if (res.status == 401) {
+        generateSidebarByRole("");
     }
-])
+})
 
 async function selectPage(page, element) {
     if (page == selectedSidebarPage) return;
@@ -56,11 +112,17 @@ async function selectPage(page, element) {
 
     element.classList.add("selected")
 
+    if (selectedSidebarItem.getAttribute("data-page-label")) {
+        document.getElementById("page-label").innerText = selectedSidebarItem.getAttribute("data-page-label")
+    } else {
+        document.getElementById("page-label").innerText = "Dashboard"
+    }
+
+    let newContent = await (await fetch(`/pages/${page}`)).text();
+    let fragment = document.createRange().createContextualFragment(newContent)
+
     let content = document.getElementById("content");
     content.innerHTML = "";
-
-    let newContent = await (await fetch("/pages/login.html")).text();
-    let fragment = document.createRange().createContextualFragment(newContent)
     content.appendChild(fragment)
 } 
 

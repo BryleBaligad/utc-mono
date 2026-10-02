@@ -14,6 +14,10 @@ export function verifySession(sessionToken: string | null, ip: string): boolean 
     let db = getDb()
 
     let sessionExpired: any = db.query("SELECT expired FROM sessions WHERE token = ?").get(sessionToken)
+    if (!sessionExpired) {
+        return false
+    }
+
     if (sessionExpired.expired == 1) {
         return false
     }

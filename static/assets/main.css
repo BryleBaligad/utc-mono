@@ -50,8 +50,8 @@ body {
 }
 
 .sidebar-item {
-    padding: 2px;
-    margin-bottom: 4px;
+    padding: 3px;
+    margin-bottom: 8px;
     white-space: nowrap;
     transition: padding var(--sidebar-collapse-animation-duration) ease, border-radius var(--sidebar-collapse-animation-duration) ease;
     border-radius: 3px 0 0 3px;
@@ -70,13 +70,15 @@ body {
 }
 
 .sidebar-item:hover {
-    background-color: lightgray;
+    /* background-color: lightgray; */
+    background: linear-gradient(to right, lightgray, white);
     cursor: pointer;
     user-select: none;
 }
 
 .sidebar-item.selected {
-    background-color: #00C3FF;
+    /* background-color: #00C3FF; */
+    background: linear-gradient(to right, #00c3ff, white);
     font-weight: bold;
 }
 
@@ -99,11 +101,6 @@ body {
 
 .main-container.collapse .sidebar-label {
     display: none;
-}
-
-.content {
-    padding-top: 16px;
-    padding-left: 12px;
 }
 
 .footer {

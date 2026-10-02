@@ -7,12 +7,17 @@ import { getDb } from "../../db"
  */
 export function getRoleFromToken(sessionToken: string): string {
     let db = getDb()
-    let accountId = db.query("SELECT account_id FROM sessions WHERE token = ?").get(sessionToken) as string | null
+    let accountId: any = db.query("SELECT account_id FROM sessions WHERE token = ?").get(sessionToken)
+
     if (!accountId) {
         return ""
     }
 
-    let role = db.query("SELECT role FROM accounts WHERE id = ?").get(accountId) as string
+    let role: any = db.query("SELECT role FROM accounts WHERE id = ?").get(accountId.account_id)
 
-    return role || ""
+    if (role) {
+        return role.role
+    }
+
+    return ""
 }

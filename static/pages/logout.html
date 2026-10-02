@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    .page-content {
+        padding-top: 16px;
+        padding-left: 12px;
+    }
+    
+    .bigtext {
+        font-size: x-large;
+        font-weight: bold;
+    }
+
+    #subtitle {
+        font-size: smaller;
+    }
+</style>
+
+<body>
+    <div class="page-content">
+        <span class="bigtext">Log Out</span><br>
+        <span id="subtitle">Are you sure you want to log out?</span><br><br><br>
+        <button id="logoutButton">Log out</button>
+    </div>
+    <script>
+        document.getElementById("logoutButton").onclick = () => {
+            fetch("/api/v1/sessions", {
+                method: "DELETE"
+            }).then(async res => {
+                if (await res.text()) {
+                    generateSidebarByRole("")
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
