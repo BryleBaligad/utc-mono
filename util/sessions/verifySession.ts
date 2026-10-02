@@ -13,18 +13,18 @@ export function verifySession(sessionToken: string | null, ip: string): boolean 
 
     let db = getDb()
 
-    let sessionExpired = db.query("SELECT expired FROM sessions WHERE token = ?").get(sessionToken)
-    if (sessionExpired == 1) {
+    let sessionExpired: any = db.query("SELECT expired FROM sessions WHERE token = ?").get(sessionToken)
+    if (sessionExpired.expired == 1) {
         return false
     }
 
-    let sessionGeneratedIP = db.query("SELECT ip_address FROM sessions WHERE token = ?").get(sessionToken)
-    if (sessionGeneratedIP != ip) {
-        db.query("INSERT INTO sessions (expired) VALUES (TRUE) WHERE token = ?").run(sessionToken)
+    let sessionGeneratedIP: any = db.query("SELECT ip_address FROM sessions WHERE token = ?").get(sessionToken)
+    if (sessionGeneratedIP?.ip_address != ip) {
+        db.query("UPDATE sessions SET expired = TRUE WHERE token = ?").run(sessionToken)
         return false
     }
 
     // Extend expiry by 15 mins (900000ms)
-    db.query("INSERT INTO sessions (expiry) VALUES (?)").run(Date.now() + 900000)
+    db.query("UPDATE sessions SET expiry = ? WHERE token = ?").run(Date.now() + 900000, sessionToken)
     return true
 }

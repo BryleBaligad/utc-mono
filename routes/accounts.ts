@@ -81,7 +81,8 @@ async function accountsPOST(req: Bun.BunRequest): Promise<Response> {
             })
         }
     }
-    return new Response()
+
+    return new Response("400 Bad Request", { status: 400 })
 }
 
 function isAccountsPOSTBody(body: any): body is AccountsPOSTRequest {
