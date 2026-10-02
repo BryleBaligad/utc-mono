@@ -76,7 +76,7 @@ async function sessionsPOST(req: Bun.BunRequest): Promise<Response> {
 
         log(`${censor(body.username, 2)} logged in`)
 
-        return new Response("Login successful")
+        return new Response("200 OK")
     }
 
     return new Response("400 Bad Request", { status: 400 })
