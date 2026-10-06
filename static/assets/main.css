@@ -7,11 +7,16 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.parent-container {
+    min-width: max-content;
+}
+
 .main-header {
     height: 92px;
     position: relative;
     background: linear-gradient(0deg,rgba(0, 195, 255, 1) 0%, rgba(0, 195, 255, 1) 19%, rgba(156, 207, 214, 1) 19%, rgba(199, 255, 255, 1) 21%, rgba(171, 255, 255, 1) 21%, rgba(205, 255, 255, 1) 32%, rgba(255, 255, 255, 1) 81%);
-    border-bottom: solid 3px lightgray 
+    border-bottom: solid 3px lightgray;
+    min-width: max-content
 }
 
 .main-header .logo {
@@ -28,7 +33,7 @@ body {
 .main-container {
     display: grid;
     grid-template-columns: 10em auto;
-    grid-template-rows: calc(100vw - 64px) 64px;
+    grid-template-rows: calc(100vh - 64px) 64px;
     transition: grid-template-columns var(--sidebar-collapse-animation-duration) ease;
 }
 
@@ -103,9 +108,82 @@ body {
     display: none;
 }
 
+.content {
+    margin-right: 4em;
+}
+
 .footer {
     grid-column: span 2;
     border-top: 2px solid lightgray;
     font-size: x-small;
     background: linear-gradient(180deg,rgba(0, 195, 255, 1) 0%, rgba(0, 195, 255, 1) 7%, rgba(156, 207, 214, 1) 7%, rgba(199, 255, 255, 1) 8%, rgba(255, 255, 255, 1) 53%);;
+}
+
+.action {
+    background-color: beige;
+    border: 1px solid lightgray;
+    display: inline-block;
+    padding: 2px;
+    user-select: none;
+    font-size: smaller;
+}
+
+.action:first-child {
+    margin-right: 1px;
+}
+
+.action:hover {
+    background-color: rgb(220, 220, 198);
+    cursor: pointer;
+}
+
+.action-icon {
+    width: 14px;
+    height: 14px;
+    translate: 0 2px;
+    padding-right: 2px;
+}
+
+.hidden-text {
+    color: rgba(0, 0, 0, 0);
+    user-select: none;
+}
+
+.hidden-text::before {
+    content: "*****";
+    color: black;
+}
+
+.hidden-text:hover {
+    color: black;
+    background: none;
+}
+
+.hidden-text:hover::before {
+    content: "";
+}
+
+table {
+    border: 1px solid lightgray;
+    border-collapse: collapse;
+}
+
+th {
+    padding: 4px;
+    background-color: beige;
+}
+
+th, td {
+    border: 1px solid lightgray;
+    border-collapse: collapse;
+    white-space: nowrap;
+    font-size: smaller;
+}
+
+td {
+    font-size: smaller;
+}
+
+tr:nth-child(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
 }

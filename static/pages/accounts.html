@@ -10,12 +10,396 @@
         font-size: x-large;
         font-weight: bold;
     }
+
+    .mediumtext {
+        font-size: medium;
+        font-weight: bold;
+    }
+
+    .accountDetailViewContainer {
+        position: absolute;
+        padding: 32px;
+        top: 94.4px;
+        display: none;
+    }
+
+    #accountDetailView {
+        background-color: beige;
+        padding: 16px;
+        border: 1px solid lightgray;
+        font-size: smaller;
+        box-shadow: 0 0 32px rgba(0, 0, 0, 0.25);
+    }
+
+    #accountDetailView input {
+        margin-top: 6px;
+    }
 </style>
 
 <body>
     <div class="page-content">
-        <span class="bigtext">Accounts</span>
+        <span class="bigtext">Accounts</span><br><br>
+        <table id="accountsTable">
+            <tr>
+                <th>Account ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Activated</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </table>
+        <br>
+        <button class="action" onmousedown="openAccountCreationWindow()">
+            <img class="action-icon" src="/assets/icons/silk-svg/User add.svg"><span>Create New Account</span>
+        </button>
     </div>
+    <div class="accountDetailViewContainer">
+        <div id="accountDetailView">
+            <form id="accountDetailForm" onsubmit="handleAccountDetailSubmit(); return false;">
+                <img id="accountDetailIcon" src="/assets/icons/silk-svg/User.svg" width="24" height="24" style="translate: 0 2.5px"> &nbsp;
+                <span id="accountDetailHeader" class="bigtext">Account Details</span><br><br>
+                <span>ID:</span> <input name="id" id="accountID" size="5" disabled> &nbsp;
+                Username: <input name="username" id="accountUsername" size="10" disabled> &nbsp;
+                Role: <select name="role" id="accountRole">
+                    <option>admin</option>
+                    <option>driver</option>
+                    <option>manager</option>
+                    <option>customer</option>
+                </select> &nbsp;
+                <br>Alias: <input name="alias" id="accountAlias" size="10"> &nbsp;
+                <label for="accountActivated">Activated </label> <input name="activated" id="accountActivated" type="checkbox"> &nbsp;
+                <label id="resetPasswordLabel" for="resetPasswordCheckbox">Reset Password </label> <input id="resetPasswordCheckbox" type="checkbox"> <input type="password" name="password" disabled id="accountPassword" size="16">
+                <br><br>
+                <span class="mediumtext">Additional Details</span> &nbsp;
+                <label for="enableAdditionalDetails">Enable </label> <input id="enableAdditionalDetails" type="checkbox"><span style="font-size: smaller">(Toggling this option off will remove additional details on submit)</span><br>
+                First Name: <input name="first_name" id="accountFirstName" size="10" disabled> * &nbsp;
+                Middle Name: <input name="middle_name" id="accountMiddleName" size="10" disabled> &nbsp;
+                Last Name: <input name="last_name" id="accountLastName" size="10" disabled> * &nbsp;<br>
+                Mobile Number: <input name="mobile_number" id="accountMobileNumber" size="10" disabled> * &nbsp;
+                Email Address: <input name="email_address" id="accountEmailAddress" size="10" disabled> &nbsp;<br>
+                <span style="font-size: smaller">All fields marked with * are required.</span><br><br>
+                Note<br>
+                <textarea id="accountNote" name="note" disabled></textarea>
+                <div style="display: flex; justify-content: flex-end; width: 100%;">
+                    <button class="action" type="button" id="accountDetailClose">
+                        <img class="action-icon" src="/assets/icons/silk-svg/Cancel.svg">
+                        <span>Close</span>
+                    </button> &nbsp;
+                    <button class="action" type="submit">
+                        <img class="action-icon" src="/assets/icons/silk-svg/Accept.svg">
+                        <span>Submit</span>
+                    </button> &nbsp;
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function load() {
+            fetch("/api/v1/accounts").then(async res => {
+                if (res.status == 403) {
+                    generateSidebarByRole("");
+                    return;
+                }
+
+                document.querySelectorAll("#accountsTable > :not(:first-child)").forEach(element => element.remove())
+
+                let json = await res.json();
+                for (let i = 0; i < json.length; i++) {
+                    const account = json[i];
+                    addAccountsTableRow(account.id, account.username, account.role, account.activated, account.created_at)
+                }
+            })
+        }
+
+        load();
+
+        function addAccountsTableRow(id, username, role, activated, createdAt) {
+            let accountsTable = document.getElementById("accountsTable");
+            let row = document.createElement("tr");
+            let idCell = document.createElement("td");
+            idCell.innerText = id;
+
+            let usernameCell = document.createElement("td");
+            if (role == "customer") {
+                usernameCell.className = "hidden-text";
+            }
+            usernameCell.innerText = username;
+
+            let roleCell = document.createElement("td");
+            roleCell.innerText = role;
+
+            let activatedCell = document.createElement("td");
+            activatedCell.innerText = activated;
+
+            let createdAtCell = document.createElement("td");
+            createdAtCell.innerText = createdAt;
+
+            let actionsCell = document.createElement("td");
+            let viewEditAction = document.createElement("div");
+            viewEditAction.className = "action";
+            viewEditAction.onmousedown = () => { openAccountDetailsWindow(id) }
+
+            let viewEditActionIcon = document.createElement("img");
+            viewEditActionIcon.className = "action-icon";
+            viewEditActionIcon.src = "/assets/icons/silk-svg/Magnifier.svg";
+
+            let viewEditActionLabel = document.createElement("span");
+            viewEditActionLabel.innerText = "View/Edit Details";
+
+            viewEditAction.append(viewEditActionIcon, viewEditActionLabel);
+
+            let deleteAction = document.createElement("div");
+            deleteAction.className = "action";
+            deleteAction.onmousedown = () => { deleteAccount(id) }
+
+            let deleteActionIcon = document.createElement("img");
+            deleteActionIcon.className = "action-icon";
+            deleteActionIcon.src = "/assets/icons/silk-svg/Delete.svg";
+
+            let deleteActionLabel = document.createElement("span");
+            deleteActionLabel.innerText = "Delete";
+
+            deleteAction.append(deleteActionIcon, deleteActionLabel);
+
+            // id 1 is special because it's admin
+            actionsCell.append(viewEditAction, id != 1 ? deleteAction : "");
+
+            row.append(idCell, usernameCell, roleCell, activatedCell, createdAtCell, actionsCell);
+
+            accountsTable.append(row);
+        }
+
+        document.getElementById("accountDetailClose").onmousedown = () => {
+            document.querySelector(".accountDetailViewContainer").style.display = "none";
+        }
+
+        document.getElementById("resetPasswordCheckbox").oninput = () => {
+            let checkbox = document.getElementById("resetPasswordCheckbox");
+            if (checkbox.checked) {
+                document.getElementById("accountPassword").removeAttribute("disabled")
+            } else {
+                document.getElementById("accountPassword").setAttribute("disabled", "true")
+            }
+        }
+
+        document.getElementById("enableAdditionalDetails").oninput = () => {
+            console.log("toggled additional details")
+            let checkbox = document.getElementById("enableAdditionalDetails");
+            if (checkbox.checked) {
+                document.getElementById("accountFirstName").removeAttribute("disabled")
+                document.getElementById("accountFirstName").setAttribute("required", "true")
+                document.getElementById("accountMiddleName").removeAttribute("disabled")
+                document.getElementById("accountLastName").removeAttribute("disabled")
+                document.getElementById("accountLastName").setAttribute("required", "true")
+                document.getElementById("accountMobileNumber").removeAttribute("disabled")
+                document.getElementById("accountMobileNumber").setAttribute("required", "true")
+                document.getElementById("accountEmailAddress").removeAttribute("disabled")
+                document.getElementById("accountNote").removeAttribute("disabled")
+            } else {
+                document.getElementById("accountFirstName").setAttribute("disabled", "true")
+                document.getElementById("accountFirstName").removeAttribute("required")
+                document.getElementById("accountMiddleName").setAttribute("disabled", "true")
+                document.getElementById("accountLastName").setAttribute("disabled", "true")
+                document.getElementById("accountLastName").removeAttribute("required")
+                document.getElementById("accountMobileNumber").setAttribute("disabled", "true")
+                document.getElementById("accountMobileNumber").removeAttribute("required")
+                document.getElementById("accountEmailAddress").setAttribute("disabled", "true")
+                document.getElementById("accountNote").setAttribute("disabled", "true")
+            }
+        }
+
+        async function openAccountDetailsWindow(id) {
+            document.getElementById("accountDetailIcon").src = "/assets/icons/silk-svg/User.svg"
+            document.getElementById("accountDetailHeader").innerText = "Account Details"
+
+            document.getElementById("accountPassword").removeAttribute("required")
+            document.getElementById("accountPassword").setAttribute("disabled", "true")
+            document.getElementById("accountPassword").value = ""
+            document.getElementById("resetPasswordCheckbox").removeAttribute("disabled")
+            document.getElementById("resetPasswordCheckbox").checked = false
+            document.getElementById("resetPasswordCheckbox").style.display = "unset"
+            document.getElementById("resetPasswordLabel").innerText = "Reset Password "
+
+            let req = await fetch(`/api/v1/accounts/${id}`);
+            if (req.status == 404) {
+                return window.alert("Account not found!");
+            }
+
+            let account = await req.json();
+
+            document.querySelector(".accountDetailViewContainer").style.display = "unset";
+
+            document.getElementById("accountID").value = account.id
+            document.getElementById("accountUsername").value = account.username
+            document.getElementById("accountUsername").setAttribute("disabled", "true")
+            document.getElementById("accountRole").value = account.role
+            document.getElementById("accountActivated").checked = account.activated == "Yes"
+            document.getElementById("accountAlias").value = account.name
+
+            if (account.account_details) {
+                document.getElementById("enableAdditionalDetails").checked = true;
+                document.getElementById("enableAdditionalDetails").oninput();
+
+                document.getElementById("accountFirstName").value = account.account_details.first_name
+                document.getElementById("accountMiddleName").value = account.account_details.middle_name
+                document.getElementById("accountLastName").value = account.account_details.last_name
+                document.getElementById("accountMobileNumber").value = account.account_details.mobile_number
+                document.getElementById("accountEmailAddress").value = account.account_details.email_address
+                document.getElementById("accountNote").innerText = account.account_details.note
+            } else {
+                document.getElementById("enableAdditionalDetails").checked = false;
+                document.getElementById("enableAdditionalDetails").oninput();
+
+                document.getElementById("accountFirstName").value = ""
+                document.getElementById("accountMiddleName").value = ""
+                document.getElementById("accountLastName").value = ""
+                document.getElementById("accountMobileNumber").value = ""
+                document.getElementById("accountEmailAddress").value = ""
+                document.getElementById("accountNote").innerText = ""
+            }
+        }
+
+        async function openAccountCreationWindow() {
+            document.getElementById("accountDetailIcon").src = "/assets/icons/silk-svg/User add.svg"
+            document.getElementById("accountDetailHeader").innerText = "Create New Account"
+            document.querySelector(".accountDetailViewContainer").style.display = "unset";
+
+            document.getElementById("accountPassword").setAttribute("required", "true")
+            document.getElementById("accountPassword").removeAttribute("disabled")
+            document.getElementById("accountPassword").value = ""
+            document.getElementById("resetPasswordCheckbox").setAttribute("disabled", "true")
+            document.getElementById("resetPasswordCheckbox").style.display = "none"
+            document.getElementById("resetPasswordLabel").innerText = "Password: "
+
+            document.getElementById("accountID").value = ""
+            document.getElementById("accountUsername").removeAttribute("disabled")
+            document.getElementById("accountRole").value = "driver"
+            document.getElementById("accountActivated").checked = false
+            document.getElementById("accountAlias").value = ""
+
+            document.getElementById("enableAdditionalDetails").checked = false;
+            document.getElementById("enableAdditionalDetails").oninput();
+
+            document.getElementById("accountFirstName").value = ""
+            document.getElementById("accountMiddleName").value = ""
+            document.getElementById("accountLastName").value = ""
+            document.getElementById("accountMobileNumber").value = ""
+            document.getElementById("accountEmailAddress").value = ""
+            document.getElementById("accountNote").innerText = ""
+        }
+
+        async function handleAccountDetailSubmit() {
+            let id = document.getElementById("accountID").value;
+
+            if (id) {
+                // updating account details
+                let req = await fetch(`/api/v1/accounts/${id}`);
+                if (req.status == 404) {
+                    return window.alert("Account not found!");
+                }
+
+                let account = await req.json();
+
+                let formData = new FormData(document.getElementById("accountDetailForm"));
+                console.log(account, formData)
+
+                if (!document.getElementById("enableAdditionalDetails").checked && account.account_details != null) {
+                    console.log("Deleting additional details")
+
+                    let res = await fetch(`/api/v1/accounts/${id}/details`, {
+                        method: "DELETE"
+                    });
+                }
+
+                let reqJson = {
+                    role: formData.get("role"),
+                    activated: formData.get("activated") == "on",
+                }
+
+                if (formData.has("name")) reqJson.name = formData.get("name")
+                if (formData.has("password")) reqJson.password = formData.get("password")
+
+                if (document.getElementById("enableAdditionalDetails").checked) {
+                    if (formData.has("first_name")) reqJson.first_name = formData.get("first_name")
+                    if (formData.has("middle_name")) reqJson.middle_name = formData.get("middle_name")
+                    if (formData.has("last_name")) reqJson.last_name = formData.get("last_name")
+                    if (formData.has("mobile_number")) reqJson.mobile_number = formData.get("mobile_number")
+                    if (formData.has("email_address")) reqJson.email_address = formData.get("email_address")
+                    if (formData.has("note")) reqJson.note = formData.get("note")
+                }
+
+                console.log(reqJson)
+
+                let res = await fetch(`/api/v1/accounts/${id}`, {
+                    method: "PATCH",
+                    body: JSON.stringify(reqJson)
+                })
+
+                if (res.status != 200) {
+                    console.log(res.status);
+                    window.alert("An error occurred while updating account data.");
+                    return;
+                }
+    
+                window.alert("Successfully updated account data.")
+                load();
+                document.querySelector(".accountDetailViewContainer").style.display = "none";
+            } else {
+                // creating new account
+                let formData = new FormData(document.getElementById("accountDetailForm"));
+                console.log(formData)
+
+                let reqJson = {
+                    role: formData.get("role"),
+                    activated: formData.get("activated") == "on",
+                    name: formData.get("alias"),
+                    password: formData.get("password")
+                }
+
+                if (formData.has("username")) reqJson.username = formData.get("username")
+
+                if (document.getElementById("enableAdditionalDetails").checked) {
+                    reqJson.account_details = {};
+                    reqJson.account_details.first_name = formData.get("first_name")
+                    reqJson.account_details.middle_name = formData.get("middle_name")
+                    reqJson.account_details.last_name = formData.get("last_name")
+                    reqJson.account_details.mobile_number = formData.get("mobile_number")
+                    reqJson.account_details.email_address = formData.get("email_address")
+                    reqJson.account_details.note = formData.get("note")
+                }
+
+                console.log(reqJson)
+
+                let res = await fetch(`/api/v1/accounts`, {
+                    method: "POST",
+                    body: JSON.stringify(reqJson)
+                })
+
+                if (res.status != 200) {
+                    console.log(res.status);
+                    window.alert("An error occurred while updating account data.");
+                    return;
+                }
+
+                window.alert("Successfully created account.")
+                load();
+                document.querySelector(".accountDetailViewContainer").style.display = "none";
+            }
+        }
+
+        async function deleteAccount(id) {
+            if (window.confirm(`Are you sure you want to delete account ID ${id}?`)) {
+                let res = fetch(`/api/v1/accounts/${id}`, {
+                    method: "DELETE"
+                })
+
+                window.alert("Successfully deleted account.")
+                load();
+                document.querySelector(".accountDetailViewContainer").style.display = "none";
+            }
+        }
+    </script>
 </body>
 
 </html>

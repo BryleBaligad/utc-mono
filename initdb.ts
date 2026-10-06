@@ -56,7 +56,7 @@ export async function init() {
                 middle_name     TEXT,
                 last_name       TEXT        NOT NULL,
                 mobile_number   TEXT        NOT NULL,
-                email_address   TEXT        NOT NULL,
+                email_address   TEXT,
                 note            TEXT,
                 extra_fields    TEXT,
 
@@ -117,13 +117,17 @@ export async function init() {
             db.run(`
             CREATE TABLE trips (
                 id              INTEGER     PRIMARY KEY,
+                status          TEXT        NOT NULL,
                 type            TEXT        NOT NULL,
-                driver_id       INTEGER     NOT NULL,
-                vehicle_id      INTEGER     NOT NULL,
-                start_at        TEXT        NOT NULL,
-                end_at          TEXT        NOT NULL,
+                driver_id       INTEGER,
+                vehicle_id      INTEGER,
+                vehicle_type    TEXT        NOT NULL,
+                start_at        TEXT,
+                end_at          TEXT,
                 start_location  TEXT,
                 end_location    TEXT,
+                passenger_count INTEGER     NOT NULL,
+                flight_number   TEXT,
                 note            TEXT,
                 extra_fields    TEXT,
 

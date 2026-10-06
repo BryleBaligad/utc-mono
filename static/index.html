@@ -7,28 +7,30 @@
     <link rel="stylesheet" href="/assets/main.css">
 </head>
 <body>
-    <header class="main-header">
-        <div class="logo">
-            <img src="/assets/utc.png">
-            <span id="page-label" style="font-weight: bold; margin-left: 16px; display: none;">Dashboard</span>
-        </div>
-    </header>
-    <div id="main-container" class="main-container">
-        <div id="sidebar" class="sidebar">
-            <div class="sidebar-item collapse-item" onclick="toggleSidebar()">
-                <img id="sidebar-collapse-icon" class="sidebar-icon" src="/assets/icons/silk-svg/Application side collapse.svg"><span class="sidebar-label">Hide Sidebar</span>
+    <div class="parent-container">
+        <header class="main-header">
+            <div class="logo">
+                <img src="/assets/utc.png">
+                <span id="page-label" style="font-weight: bold; margin-left: 16px; display: none;">Dashboard</span>
             </div>
-            <div id="sidebar-items">
+        </header>
+        <div id="main-container" class="main-container">
+            <div id="sidebar" class="sidebar">
+                <div class="sidebar-item collapse-item" onmousedown="toggleSidebar()">
+                    <img id="sidebar-collapse-icon" class="sidebar-icon" src="/assets/icons/silk-svg/Application side collapse.svg"><span class="sidebar-label">Hide Sidebar</span>
+                </div>
+                <div id="sidebar-items">
+                </div>
             </div>
+            <div id="content" class="content">
+            </div>
+            <footer class="footer">
+                <center style="margin-top: 1em;">
+                    Umali Tours Corporation<br>
+                    Copyright &copy; 2026. All Rights Reserved.
+                </center>
+            </footer>
         </div>
-        <div id="content" class="content">
-        </div>
-        <footer class="footer">
-            <center style="margin-top: 1em;">
-                Umali Tours Corporation<br>
-                Copyright &copy; 2026. All Rights Reserved.
-            </center>
-        </footer>
     </div>
     <script src="/assets/main.js">
     </script>

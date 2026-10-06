@@ -28,6 +28,10 @@ function generateSidebar(list) {
             selectPage(listItem.page, itemDiv);
         }
 
+        itemDiv.ontouchstart = () => {
+            selectPage(listItem.page, itemDiv);
+        }
+
         if (listItem.title) {
             itemDiv.setAttribute("data-page-label", listItem.title);
 
@@ -72,9 +76,9 @@ function generateSidebarByRole(role) {
                 },
                 {
                     icon: "Car",
-                    label: "Vehicles",
-                    page: "vehicles.html",
-                    title: "Vehicle Management"
+                    label: "Fleet",
+                    page: "fleet.html",
+                    title: "Fleet Management"
                 },
                 {
                     icon: "Map",
@@ -91,16 +95,51 @@ function generateSidebarByRole(role) {
             ])
             break;
         }
+
+        case "driver": {
+            generateSidebar([
+                {
+                    icon: "Map",
+                    label: "Trip Assignments",
+                    page: "trip_assignments.html",
+                    title: "Trip Assignments",
+                    selected: true
+                },
+                {
+                    icon: "Door Out",
+                    label: "Log out",
+                    page: "logout.html",
+                    title: "Log Out"
+                },
+            ])
+            break;
+        }
     }
 }
 
 fetch("/api/v1/sessions").then(async res => {
     if (res.status == 200) {
-        generateSidebarByRole((await res.json()).role)
+        let role = (await res.json()).role;
+        if (role != "customer") {
+            generateSidebarByRole(role)
+        } else {
+            fetch("/api/v1/sessions", {
+                method: "DELETE"
+            });
+        }
     } else if (res.status == 401) {
         generateSidebarByRole("");
     }
 })
+
+setInterval(() => {
+    fetch("/api/v1/sessions").then(res => {
+        if (res.status != 200) {
+            console.log("Session timeout")
+            generateSidebarByRole("");
+        }
+    })
+}, (15 * 60000) + 100);
 
 async function selectPage(page, element) {
     if (page == selectedSidebarPage) return;

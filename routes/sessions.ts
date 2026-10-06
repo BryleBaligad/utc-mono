@@ -67,7 +67,7 @@ async function sessionsPOST(req: Bun.BunRequest): Promise<Response> {
             return new Response("401 Unauthorized", { status: 401 })
         }
 
-        if (account.role == "customer") {
+        if (account.activated == 0) {
             return new Response("403 Forbidden", { status: 403 })
         }
 
@@ -94,7 +94,7 @@ async function sessionsPOST(req: Bun.BunRequest): Promise<Response> {
             sameSite: "lax"
         })
 
-        log(`${censor(body.username, 2)} logged in`)
+        log(`${censor(body.username, 2)} (${getIPFromRequest(req)}) logged in`)
 
         return Response.json({ role: getRoleFromToken(newSessionToken) })
     }

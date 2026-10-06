@@ -24,6 +24,8 @@ export let server = Bun.serve({
             return new Response("Success")
         },
         "/api/v1/accounts": accountsRouter,
+        "/api/v1/accounts/:id": accountsRouter,
+        "/api/v1/accounts/:id/details": accountsRouter,
         "/api/v1/accounts/activation": activation,
         "/api/v1/sessions": sessionsRouter
     }
