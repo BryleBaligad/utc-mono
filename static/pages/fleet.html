@@ -14,7 +14,21 @@
 
 <body>
     <div class="page-content">
-        <span class="bigtext">Fleet</span>
+        <span class="bigtext">Fleet</span><br><br>
+        <table id="accountsTable">
+            <tr>
+                <th>Image</th>
+                <th>Vehicle ID</th>
+                <th>Plate Number</th>
+                <th>Make/Model</th>
+                <th>Type</th>
+                <th>Actions</th>
+            </tr>
+        </table>
+        <br>
+        <button class="action" onmousedown="openVehicleCreationWindow()">
+            <img class="action-icon" src="/assets/icons/silk-svg/Car add.svg"><span>Create New Vehicle</span>
+        </button>
     </div>
 </body>
 
