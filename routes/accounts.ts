@@ -179,7 +179,7 @@ async function accountsPATCH(req: Bun.BunRequest): Promise<Response> {
     }
 
     let body = await req.json()
-    if (Object.keys(body).includes("role") && role == "admin") {
+    if (Object.keys(body).includes("role") && role == "admin" && req.params.id != "1") {
         db.query("UPDATE accounts SET role = ? WHERE id = ?").run(body.role, req.params.id)
     }
 
