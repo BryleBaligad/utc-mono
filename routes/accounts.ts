@@ -29,6 +29,7 @@ export async function accountsRouter(req: Bun.BunRequest): Promise<Response> {
             res = await sendCORSOptions()
     }
 
+    res.headers.set("Access-Control-Allow-Credentials", "true")
     res.headers.set("Access-Control-Allow-Origin", "*")
 
     return res

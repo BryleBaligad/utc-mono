@@ -21,8 +21,6 @@ export async function tripsRouter(req: Bun.BunRequest): Promise<Response> {
     return new Response("400 Bad Request", { status: 400 })
 }
 
-let imgCache: any = {}
-
 export async function tripsGET(req: Bun.BunRequest): Promise<Response> {
     let db = getDb()
 

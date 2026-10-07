@@ -24,6 +24,7 @@ export async function sessionsRouter(req: Bun.BunRequest): Promise<Response> {
             break
     }
 
+    res.headers.set("Access-Control-Allow-Credentials", "true")
     res.headers.set("Access-Control-Allow-Origin", "*")
 
     return res
