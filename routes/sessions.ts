@@ -7,17 +7,25 @@ import { verifySession } from "../util/sessions/verifySession"
 import type { SessionsPOSTRequest } from "./sessions.types"
 
 export async function sessionsRouter(req: Bun.BunRequest): Promise<Response> {
+    let res = new Response("400 Bad Request", { status: 400 })
     switch(req.method) {
         case "GET":
-            return sessionsGET(req)
+            res = await sessionsGET(req)
+            break
         case "POST":
-            return sessionsPOST(req)
+            res = await sessionsPOST(req)
+            break
         case "DELETE":
-            return sessionsDELETE(req)
+            res = await sessionsDELETE(req)
+            break
         case "OPTIONS":
-            return sendCORSOptions()
+            res = await sendCORSOptions()
+            break
     }
-    return new Response("400 Bad Request", { status: 400 })
+
+    res.headers.set("Access-Control-Allow-Origin", "*")
+
+    return res
 }
 
 async function sessionsGET(req: Bun.BunRequest): Promise<Response> {
