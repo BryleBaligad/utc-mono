@@ -87,7 +87,7 @@ function generateSidebarByRole(role) {
                     title: "Trip Management"
                 },
                 {
-                    icon: "Door Out",
+                    icon: "Door out",
                     label: "Log out",
                     page: "logout.html",
                     title: "Log Out"
@@ -118,7 +118,7 @@ function generateSidebarByRole(role) {
                     title: "Trip Management"
                 },
                 {
-                    icon: "Door Out",
+                    icon: "Door out",
                     label: "Log out",
                     page: "logout.html",
                     title: "Log Out"
@@ -137,7 +137,7 @@ function generateSidebarByRole(role) {
                     selected: true
                 },
                 {
-                    icon: "Door Out",
+                    icon: "Door out",
                     label: "Log out",
                     page: "logout.html",
                     title: "Log Out"
