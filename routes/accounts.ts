@@ -49,6 +49,10 @@ async function accountsGET(req: Bun.BunRequest): Promise<Response> {
         return new Response("401 Unauthorized", { status: 401 })
     }
 
+    if (role == "customer" && req.params.id == reqAccount.id) {
+        return Response.json(reqAccount)
+    }
+
     if (role != "admin" && role != "manager" && role != "driver") {
         if (reqAccount) {
             log(`User ${censor(reqAccount.username, 2)} (${getIPFromRequest(req)}) attempted retrieving accounts list`)

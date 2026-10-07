@@ -2,6 +2,7 @@ import { sendCORSOptions } from ".."
 import { getDb } from "../db"
 import { censor, log } from "../log"
 import { getIPFromRequest } from "../util/getIPFromRequest"
+import { getAccountFromToken } from "../util/sessions/getAccountFromToken"
 import { getRoleFromToken } from "../util/sessions/getRoleFromToken"
 import { verifySession } from "../util/sessions/verifySession"
 import type { SessionsPOSTRequest } from "./sessions.types"
@@ -42,7 +43,7 @@ async function sessionsGET(req: Bun.BunRequest): Promise<Response> {
             secure: true
         })
 
-        return Response.json({ role: getRoleFromToken(sessionToken) })
+        return Response.json({ role: getRoleFromToken(sessionToken), id: getAccountFromToken(sessionToken).id })
     }
 
     return new Response("401 Unauthorized", { status: 401 })
