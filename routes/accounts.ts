@@ -50,6 +50,7 @@ async function accountsGET(req: Bun.BunRequest): Promise<Response> {
     }
 
     if (role == "customer" && req.params.id == reqAccount.id) {
+        console.log(role, req.params.id, reqAccount.id)
         return Response.json(reqAccount)
     }
 
