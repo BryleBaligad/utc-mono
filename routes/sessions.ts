@@ -37,7 +37,9 @@ async function sessionsGET(req: Bun.BunRequest): Promise<Response> {
             httpOnly: true,
             maxAge: 900,
             path: "/",
-            sameSite: "lax"
+            sameSite: "lax",
+            domain: "baligad.net",
+            secure: true
         })
 
         return Response.json({ role: getRoleFromToken(sessionToken) })
@@ -99,11 +101,12 @@ async function sessionsPOST(req: Bun.BunRequest): Promise<Response> {
         }
 
         req.cookies.set("UTC-Session", newSessionToken, {
-            // httpOnly: true,
+            httpOnly: true,
             maxAge: 900,
             path: "/",
             sameSite: "lax",
-            domain: "baligad.net"
+            domain: "baligad.net",
+            secure: true
         })
 
         log(`${censor(body.username, 2)} (${getIPFromRequest(req)}) logged in`)
