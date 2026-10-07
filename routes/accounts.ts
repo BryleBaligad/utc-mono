@@ -40,6 +40,7 @@ async function accountsGET(req: Bun.BunRequest): Promise<Response> {
     let role
     let reqAccount
     let sessionToken = req.cookies.get("UTC-Session")
+    console.log(sessionToken)
     if (verifySession(sessionToken, getIPFromRequest(req))) {
         sessionToken = sessionToken as string
         role = getRoleFromToken(sessionToken)
