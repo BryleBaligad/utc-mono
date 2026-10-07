@@ -26,20 +26,20 @@ async function accountsGET(req: Bun.BunRequest): Promise<Response> {
     let db = getDb()
 
     let role
-    let account
+    let reqAccount
     let sessionToken = req.cookies.get("UTC-Session")
     if (verifySession(sessionToken, getIPFromRequest(req))) {
         sessionToken = sessionToken as string
         role = getRoleFromToken(sessionToken)
 
-        account = getAccountFromToken(sessionToken)
+        reqAccount = getAccountFromToken(sessionToken)
     } else {
         return new Response("401 Unauthorized", { status: 401 })
     }
 
-    if (role != "admin") {
-        if (account) {
-            log(`User ${censor(account.username, 2)} (${getIPFromRequest(req)}) attempted retrieving accounts list`)
+    if (role != "admin" && role != "manager" && role != "driver") {
+        if (reqAccount) {
+            log(`User ${censor(reqAccount.username, 2)} (${getIPFromRequest(req)}) attempted retrieving accounts list`)
         } else {
             log(`IP ${getIPFromRequest(req)} attempted retrieving accounts list`)
         }
@@ -69,9 +69,28 @@ async function accountsGET(req: Bun.BunRequest): Promise<Response> {
             responseJson.account_details = accountDetails
         }
 
-        log(`User ${censor(account.username, 2)} (${getIPFromRequest(req)}) retrieved details of account ${req.params.id}`)
+        if (role == "driver") {
+            let tripsAssignedToDriverAndCustomer = db.query("SELECT * FROM trips WHERE account_id = ? AND driver_id = ?").all(req.params.id, account.id)
+
+            if (!tripsAssignedToDriverAndCustomer) {
+                return new Response("404 Not Found", { status: 404 })
+            }
+
+            // hide username/email address from driver
+            delete responseJson["username"]
+            if (responseJson.account_details) {
+                delete responseJson.account_details["email_address"]
+            }
+        }
+
+        log(`User ${reqAccount.username} (${getIPFromRequest(req)}) retrieved details of account ${req.params.id}`)
 
         return Response.json(responseJson)
+    }
+
+    if (role == "driver") {
+        log(`User ${reqAccount.username, 2} (${getIPFromRequest(req)}) attempted retrieving accounts list`)
+        return new Response("403 Forbidden", { status: 403 })
     }
 
     let accounts = db.query("SELECT id, username, role, activated, created_at, name FROM accounts").all()
@@ -80,17 +99,19 @@ async function accountsGET(req: Bun.BunRequest): Promise<Response> {
 
     for (let i = 0; i < accounts.length; i++) {
         const account: any = accounts[i]
+        let account_details: any = db.query("SELECT first_name, middle_name, last_name, mobile_number, email_address, note, extra_fields FROM account_details WHERE account_id = ?").get(account.id)
         responseJson.push({
             id: account.id,
             username: account.username,
             role: account.role,
             activated: account.activated == 1 ? "Yes" : "No",
             created_at: new Date(parseInt(account.created_at)).toLocaleString("sv"),
-            name: account.name
+            name: account.name,
+            account_details
         })
     }
 
-    log(`User ${censor(account.username, 2)} (${getIPFromRequest(req)}) retrieved accounts list`)
+    log(`User ${reqAccount.username} (${getIPFromRequest(req)}) retrieved accounts list`)
 
     return Response.json(responseJson)
 }
@@ -193,7 +214,7 @@ async function accountsPATCH(req: Bun.BunRequest): Promise<Response> {
         db.query("UPDATE accounts SET name = ? WHERE id = ?").run(body.name, req.params.id)
     }
 
-    if (Object.keys(body).includes("activated") && role == "admin") {
+    if (Object.keys(body).includes("activated") && role == "admin" && req.params.id != "1") {
         db.query("UPDATE accounts SET activated = ? WHERE id = ?").run(body.activated == true ? 1 : 0, req.params.id)
     }
 

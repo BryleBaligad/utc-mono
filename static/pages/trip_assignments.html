@@ -10,12 +10,131 @@
         font-size: x-large;
         font-weight: bold;
     }
+
+    .mediumtext {
+        font-size: medium;
+        font-weight: bold;
+    }
 </style>
 
 <body>
     <div class="page-content">
-        <span class="bigtext">Trip Assignments</span>
+        <span class="bigtext">Trip Assignments</span> &nbsp; 
+        <button class="action" onmousedown="load()">
+            <img class="action-icon" src="/assets/icons/silk-svg/Arrow Rotate CW.svg"><span>Refresh</span>
+        </button><br><br>
+        <table id="tripsTable">
+            <tr>
+                <th>Trip ID</th>
+                <th>Status</th>
+                <th>Booking Detail</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Customer</th>
+                <th>Vehicle</th>
+            </tr>
+        </table>
     </div>
+    <script>
+        function load() {
+            fetch(`/api/v1/trips`).then(async res => {
+                if (res.status == 403) {
+                    generateSidebarByRole("");
+                    return;
+                }
+
+                document.querySelectorAll("#tripsTable > :not(:first-child)").forEach(element => element.remove())
+
+                let json = await res.json();
+                for (let i = 0; i < json.length; i++) {
+                    const trip = json[i];
+                    console.log(trip)
+                    await addTripsToTableRow(trip.id, trip.status, trip.booking_type, trip.start_at, trip.end_at, trip.start_location || "", trip.end_location || "", trip.service_type, trip.service_subtype, trip.account_id, trip.vehicle_id)
+                }
+            })
+        }
+
+        load()
+
+        async function addTripsToTableRow(id, status, bookingType, startAt = "", endAt = "", startLocation = "", endLocation = "", serviceType, serviceSubtype, accountID, vehicleID) {
+            let tripsTable = document.getElementById("tripsTable");
+            let row = document.createElement("tr");
+
+            let idCell = document.createElement("td");
+            idCell.innerText = id;
+
+            let statusCell = document.createElement("td");
+            statusCell.innerText = status;
+            switch (status) {
+                case "NEGOTIATING": statusCell.style.backgroundColor = "#00c3ff"; break;
+                case "ACTIVE": statusCell.style.backgroundColor = "yellow"; break;
+                case "COMPLETED": statusCell.style.backgroundColor = "lime"; break;
+                case "CANCELLED": statusCell.style.backgroundColor = "red"; break;
+            }
+
+            let bookingDetailCell = document.createElement("td");
+            bookingDetailCell.innerText = `Booking Type: ${bookingType}\nService Type: ${serviceType}\nSubtype: ${serviceSubtype}`;
+
+            let startDetailCell = document.createElement("td");
+            startDetailCell.innerText = `${startLocation}\n${startAt ? new Date(startAt).toLocaleString("en-US") : ""}`;
+
+            let endDetailCell = document.createElement("td");
+            endDetailCell.innerText = `${endLocation}\n${endAt ? new Date(endAt).toLocaleString("en-US") : ""}`;
+
+            let accountCell = document.createElement("td");
+            if (!accountID) {
+                accountCell.innerText = "None"
+            } else {
+                let customer = await (await fetch(`/api/v1/accounts/${accountID}`)).json()
+                if (customer.account_details) {
+                    accountCell.innerText = `${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name}\n${customer.account_details.mobile_number}`;
+                } else {
+                    accountCell.innerText = `Customer ID ${customer.id}`;
+                }
+            }
+
+            let vehicleCell = document.createElement("td");
+            if (!vehicleID) {
+                vehicleCell.innerText = "None"
+            } else {
+                let vehicle = await (await fetch(`/api/v1/vehicles/${vehicleID}`)).json()
+                vehicleCell.innerText = `${vehicle.make_model} (${vehicle.type}, ${vehicle.plate_number})`;
+            }
+
+            let actionsCell = document.createElement("td");
+            let viewEditAction = document.createElement("div");
+            viewEditAction.className = "action";
+            viewEditAction.onmousedown = () => { openTripDetailsWindow(id) }
+
+            let viewEditActionIcon = document.createElement("img");
+            viewEditActionIcon.className = "action-icon";
+            viewEditActionIcon.src = "/assets/icons/silk-svg/Magnifier.svg";
+
+            let viewEditActionLabel = document.createElement("span");
+            viewEditActionLabel.innerText = "View/Edit Details";
+
+            viewEditAction.append(viewEditActionIcon, viewEditActionLabel);
+
+            let deleteAction = document.createElement("div");
+            deleteAction.className = "action";
+            deleteAction.onmousedown = () => { deleteTrip(id) }
+
+            let deleteActionIcon = document.createElement("img");
+            deleteActionIcon.className = "action-icon";
+            deleteActionIcon.src = "/assets/icons/silk-svg/Delete.svg";
+
+            let deleteActionLabel = document.createElement("span");
+            deleteActionLabel.innerText = "Delete";
+
+            deleteAction.append(deleteActionIcon, deleteActionLabel);
+
+            actionsCell.append(viewEditAction, deleteAction);
+
+            row.append(idCell, statusCell, bookingDetailCell, startDetailCell, endDetailCell, accountCell, vehicleCell);
+
+            tripsTable.append(row);
+        }
+    </script>
 </body>
 
 </html>

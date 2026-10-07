@@ -10,12 +10,719 @@
         font-size: x-large;
         font-weight: bold;
     }
+
+    .mediumtext {
+        font-size: medium;
+        font-weight: bold;
+    }
+
+    .tripDetailViewContainer {
+        position: absolute;
+        padding: 32px;
+        top: 94.4px;
+        display: none;
+    }
+
+    #tripDetailView {
+        background-color: beige;
+        padding: 16px;
+        border: 1px solid lightgray;
+        font-size: smaller;
+        box-shadow: 0 0 32px rgba(0, 0, 0, 0.25);
+    }
+
+    #tripDetailView input, #tripDetailView select {
+        margin-top: 6px;
+    }
 </style>
 
 <body>
     <div class="page-content">
-        <span class="bigtext">Trips</span>
+        <span class="bigtext">Trips</span> &nbsp; 
+        <button class="action" onmousedown="load()">
+            <img class="action-icon" src="/assets/icons/silk-svg/Arrow Rotate CW.svg"><span>Refresh</span>
+        </button><br><br>
+        <table id="tripsTable">
+            <tr>
+                <th>Trip ID</th>
+                <th>Created At</th>
+                <th>Status</th>
+                <th>Booking Detail</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Customer</th>
+                <th>Driver</th>
+                <th>Vehicle</th>
+                <th>Actions</th>
+            </tr>
+        </table>
+        <div id="pages" style="font-size: small; display: flex; gap: 8px"><a href="#" onclick="">Page 1</a></div>
+        <br>
+        <button class="action" onmousedown="openTripCreationWindow()">
+            <img class="action-icon" src="/assets/icons/silk-svg/Map add.svg"><span>Create New Trip</span>
+        </button>
     </div>
+    <div class="tripDetailViewContainer">
+        <div id="tripDetailView">
+            <form id="tripDetailForm" onsubmit="handletripDetailSubmit(); return false;">
+                <img id="tripDetailIcon" src="/assets/icons/silk-svg/Map.svg" width="24" height="24" style="translate: 0 2.5px"> &nbsp;
+                <span id="tripDetailHeader" class="bigtext">Trip Details</span><br>
+                <span>ID:</span> <input name="id" id="tripID" size="5" disabled> &nbsp;
+                Status: <select name="status" id="tripStatus" required>
+                    <option selected>CREATED</option>
+                    <option>NEGOTIATING</option>
+                    <option>ACTIVE</option>
+                    <option>COMPLETED</option>
+                    <option>CANCELLED</option>
+                </select> * &nbsp;
+                Booking Type: <select name="booking_type" id="tripBookingType" required>
+                    <option selected>TRANSPORTATION</option>
+                    <option>RENTAL</option>
+                </select> * <br>
+                Service Type: <select name="service_type" id="tripServiceType" required>
+                    <option selected>AIRPORT TRANSFER</option>
+                    <option>P2P TRANSFER</option>
+                    <option>PANAY ISLAND TOUR</option>
+                    <option>TAXI SERVICE</option>
+                </select> * &nbsp;
+                Service Subtype: <select name="service_subtype" id="tripServiceSubtype" required>
+                    <option>ONE WAY</option>
+                    <option>ROUND TRIP</option>
+                </select> * <br>
+                Customer ID: <input name="account_id" id="tripAccount" list="customersList" size="6"> &nbsp; 
+                <datalist id="customersList"></datalist>
+                Driver ID: <input name="driver_id" id="tripDriver" list="driversList" size="6"> &nbsp;
+                <datalist id="driversList"></datalist>
+                Vehicle ID: <input name="vehicle_id" id="tripVehicle" list="vehiclesList" size="6"> &nbsp;
+                <datalist id="vehiclesList"></datalist>
+                <hr>
+                Start Location: <input name="start_location" id="tripStartLocation"> &nbsp;
+                End Location: <input name="end_location" id="tripEndLocation"><br>
+                Start Date/Time: <input name="start_at" id="tripStartAt" type="datetime-local"> &nbsp;
+                End Date/Time: <input name="end_at" id="tripEndAt" type="datetime-local"><br>
+                Luggage: <input name="luggage_count" id="tripLuggageCount" type="number" value="0" min="0" size="4"> &nbsp;
+                Passengers: <input name="passenger_count" id="tripPassengerCount" type="number" value="1" min="1" size="4" required> * &nbsp;
+                Flight Number: <input name="flight_number" id="tripFlightNumber" size="6"> &nbsp;
+                <br><br>
+                Note<br>
+                <textarea id="tripNote" name="note"></textarea>
+                <div style="display: flex; justify-content: flex-end; width: 100%;">
+                    <button class="action" type="button" id="tripDetailClose">
+                        <img class="action-icon" src="/assets/icons/silk-svg/Cancel.svg">
+                        <span>Close</span>
+                    </button> &nbsp;
+                    <button class="action" type="submit">
+                        <img class="action-icon" src="/assets/icons/silk-svg/Accept.svg">
+                        <span>Submit</span>
+                    </button> &nbsp;
+                </div>
+                <div>
+                    <hr>
+                    <span class="mediumtext">Vehicle Schedule</span> &nbsp; <span><div style="background-color: green; width: 20px; height: 14px; translate: 0 2px; border: 1px solid lightgray; display: inline-block;"></div> Current Trip</span> &nbsp; <span><div style="background-color: red; width: 20px; height: 14px; translate: 0 2px; border: 1px solid lightgray; display: inline-block;"></div> Schedule Conflict</span> &nbsp; <span><div style="background-color: white; width: 20px; height: 14px; translate: 0 2px; border: 1px solid lightgray; display: inline-block;"></div> Other Trips (random color)</span><br>
+                    <span id="scheduleConflictWarning" style="color: red; display: none;"><b><em>SCHEDULE CONFLICTS WITH EXISTING TRIPS FOR THIS VEHICLE!</em></b></span>
+                    <table id="vehicleSchedule" style="font-family: monospace; font-size: medium;">
+                        <tr>
+                            <th>Day</th>
+                            <th>00</th>
+                            <th>01</th>
+                            <th>02</th>
+                            <th>03</th>
+                            <th>04</th>
+                            <th>05</th>
+                            <th>06</th>
+                            <th>07</th>
+                            <th>08</th>
+                            <th>09</th>
+                            <th>10</th>
+                            <th>11</th>
+                            <th>12</th>
+                            <th>13</th>
+                            <th>14</th>
+                            <th>15</th>
+                            <th>16</th>
+                            <th>17</th>
+                            <th>18</th>
+                            <th>19</th>
+                            <th>20</th>
+                            <th>21</th>
+                            <th>22</th>
+                            <th>23</th>
+                        </tr>
+                    </table>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        async function load(page = 0, countPerPage = 10) {
+            let pagesDiv = document.getElementById("pages");
+            pagesDiv.innerHTML = ""
+
+            let tripCount = parseInt(await (await fetch("/api/v1/trips?count")).text());
+
+            let pageCount = Math.ceil(tripCount / countPerPage);
+
+            for (let i = 0; i < pageCount; i++) {
+                let pageAnchor = document.createElement("a");
+                pageAnchor.innerText = `Page ${i + 1}`
+                if (i != page) {
+                    pageAnchor.href = "#"
+                    pageAnchor.onclick = () => { load(i, countPerPage) }
+                }
+                pagesDiv.append(pageAnchor)
+            }
+
+            fetch(`/api/v1/trips?limit=${countPerPage}&offset=${page * countPerPage}`).then(async res => {
+                if (res.status == 403) {
+                    generateSidebarByRole("");
+                    return;
+                }
+
+                document.querySelectorAll("#tripsTable > :not(:first-child)").forEach(element => element.remove())
+
+                let json = await res.json();
+                for (let i = 0; i < json.length; i++) {
+                    const trip = json[i];
+                    await addTripsToTableRow(trip.id, trip.created_at, trip.status, trip.booking_type, trip.service_type, trip.service_subtype, trip.start_at, trip.end_at, trip.start_location || "", trip.end_location || "", trip.account_id, trip.driver_id, trip.vehicle_id)
+                }
+            })
+        }
+
+        load()
+
+        fetch("/api/v1/accounts").then(async res => {
+            let json = await res.json();
+            let customers = json.filter(acc => acc.role == "customer")
+            let customersList = document.getElementById("customersList")
+            for (let i = 0; i < customers.length; i++) {
+                const customer = customers[i];
+                let option = document.createElement("option");
+                option.value = customer.id;
+                if (customer.account_details) {
+                    option.innerText = `${customer.id}: ${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name} (${customer.username})`.replace(/\s+/g, " ")
+                } else {
+                    option.innerText = `${customer.id}: ${customer.username}`
+                }
+                customersList.append(option)
+            }
+
+            let drivers = json.filter(acc => acc.role == "driver")
+            let driversList = document.getElementById("driversList")
+            for (let i = 0; i < drivers.length; i++) {
+                const driver = drivers[i];
+                let option = document.createElement("option");
+                option.value = driver.id;
+                if (driver.account_details) {
+                    option.innerText = `${driver.id}: ${driver.account_details.first_name} ${driver.account_details.middle_name} ${driver.account_details.last_name} (${driver.username})`.replace(/\s+/g, " ")
+                } else {
+                    option.innerText = `${driver.id}: ${driver.username}`
+                }
+                driversList.append(option)
+            }
+        })
+
+        fetch("/api/v1/vehicles").then(async res => {
+            let json = await res.json();
+            let vehiclesList = document.getElementById("vehiclesList")
+            for (let i = 0; i < json.length; i++) {
+                const vehicle = json[i];
+                let option = document.createElement("option");
+                option.value = vehicle.id;
+                option.innerText = `${vehicle.id}: ${vehicle.make_model} (${vehicle.type}, ${vehicle.plate_number})`
+                vehiclesList.append(option)
+            }
+        })
+
+        document.getElementById("tripDetailClose").onmousedown = () => {
+            document.querySelector(".tripDetailViewContainer").style.display = "none";
+        }
+
+        document.getElementById("tripBookingType").oninput = () => {
+            let dropdown = document.getElementById("tripBookingType");
+            if (dropdown.value == "TRANSPORTATION") {
+                document.getElementById("tripServiceType").innerHTML = `
+                    <option selected>AIRPORT TRANSFER</option>
+                    <option>P2P TRANSFER</option>
+                    <option>PANAY ISLAND TOUR</option>
+                    <option>TAXI SERVICE</option>
+                `
+
+                document.getElementById("tripServiceSubtype").innerHTML = `
+                    <option selected>ONE WAY</option>
+                    <option>ROUND TRIP</option>
+                `
+            }
+
+            if (dropdown.value == "RENTAL") {
+                document.getElementById("tripServiceType").innerHTML = `
+                    <option selected>VAN RENTAL</option>
+                    <option>PRIVATE CAR</option>
+                    <option>BRIDAL CAR</option>
+                    <option>WHITE TAXI CHARTER</option>
+                `
+
+                document.getElementById("tripServiceSubtype").innerHTML = `
+                    <option selected>HALF DAY</option>
+                    <option>FULL DAY</option>
+                    <option>MULTI DAY</option>
+                `
+            }
+        }
+
+        function generateColour(seed) {
+            let hash = 0;
+            for (let i = 0; i < seed.length; i++) {
+                hash = seed.charCodeAt(i) + ((hash << 5) - hash);
+            }
+            hash = Math.abs(hash);
+
+            const hue = hash % 360; 
+            
+            const saturation = (hash % 15) + 60;
+            const lightness = (hash % 10) + 70;
+
+            return hslToHex(hue, saturation, lightness);
+        }
+
+        function hslToHex(h, s, l) {
+            s /= 100;
+            l /= 100;
+            const a = s * Math.min(l, 1 - l);
+            const f = n => {
+                const k = (n + h / 30) % 12;
+                const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+                return Math.round(255 * color).toString(16).padStart(2, '0');
+            };
+            return `#${f(0)}${f(8)}${f(4)}`;
+        }
+
+        async function vehicleScheduleChange() {
+            let currentTripID = document.getElementById("tripID").value;
+            let vehicleID = document.getElementById("tripVehicle").value;
+            let req = await fetch(`/api/v1/trips?vehicleID=${vehicleID}`);
+
+            let trips = await req.json();
+
+            let oldestDate = Number.MAX_VALUE;
+            let newestDate = 0;
+
+            for (let i = 0; i < trips.length; i++) {
+                const trip = trips[i];
+                if (!trip.start_at || !trip.end_at) continue;
+                if (currentTripID == trip.id) continue;
+
+                let startDate = new Date(trip.start_at);
+                let endDate = new Date(trip.end_at);
+
+                if (Date.now() > endDate) {
+                    continue;
+                }
+
+                if (startDate < oldestDate) {
+                    oldestDate = startDate
+                }
+
+                if (endDate > newestDate) {
+                    newestDate = endDate
+                }
+            }
+
+            let currentStartAt = new Date(document.getElementById("tripStartAt").value);
+            let currentEndAt = new Date(document.getElementById("tripEndAt").value);
+
+            if (currentStartAt < oldestDate) {
+                oldestDate = currentStartAt
+            }
+
+            if (currentEndAt > newestDate) {
+                newestDate = currentEndAt
+            }
+
+            if (oldestDate != Number.MAX_VALUE && newestDate != 0) {
+                document.querySelectorAll("#vehicleSchedule > :not(:first-child)").forEach(element => element.remove())
+
+                if (newestDate.getTime() > new Date(currentEndAt.getTime() + 86400000 * 3)) {
+                    console.log("Newest date too new!")
+                    newestDate = new Date(currentEndAt.getTime() + 86400000 * 3)
+                }
+
+                generateVehicleScheduleBetweenDates(oldestDate, newestDate)
+
+                for (let i = 0; i < trips.length; i++) {
+                    const trip = trips[i];
+                    if (!trip.start_at || !trip.end_at) continue;
+                    if (currentTripID == trip.id) continue;
+
+                    let startDate = new Date(trip.start_at);
+                    let endDate = new Date(trip.end_at);
+
+                    if (Date.now() > endDate) {
+                        continue;
+                    }
+
+                    if (currentEndAt.getTime() + 86400000 * 3 < startDate.getTime()) {
+                        continue;
+                    }
+
+                    markVehicleSchedule(new Date(trip.start_at), new Date(trip.end_at), true, generateColour(trip.created_at));
+                }
+            }
+
+            markVehicleSchedule(currentStartAt, currentEndAt, false)
+        }
+
+        document.getElementById("tripStartAt").oninput = vehicleScheduleChange
+        document.getElementById("tripEndAt").oninput = vehicleScheduleChange
+        document.getElementById("tripVehicle").oninput = vehicleScheduleChange
+
+        async function addTripsToTableRow(id, createdAt, status, bookingType, serviceType, serviceSubtype, startAt, endAt, startLocation, endLocation, accountID, driverID, vehicleID) {
+            let tripsTable = document.getElementById("tripsTable");
+            let row = document.createElement("tr");
+
+            let idCell = document.createElement("td");
+            idCell.innerText = id;
+
+            let createdAtCell = document.createElement("td");
+            createdAtCell.innerText = new Date(parseInt(createdAt)).toLocaleString("sv");
+
+            let statusCell = document.createElement("td");
+            statusCell.innerText = status;
+            switch (status) {
+                case "NEGOTIATING": statusCell.style.backgroundColor = "#00c3ff"; break;
+                case "ACTIVE": statusCell.style.backgroundColor = "yellow"; break;
+                case "COMPLETED": statusCell.style.backgroundColor = "lime"; break;
+                case "CANCELLED": statusCell.style.backgroundColor = "red"; break;
+            }
+
+            let bookingDetailCell = document.createElement("td");
+            bookingDetailCell.innerText = `Booking Type: ${bookingType}\nService Type: ${serviceType}\nSubtype: ${serviceSubtype}`;
+
+            let startDetailCell = document.createElement("td");
+            startDetailCell.innerText = `${startLocation}\n${startAt ? new Date(startAt).toLocaleString("en-US") : ""}`;
+
+            let endDetailCell = document.createElement("td");
+            endDetailCell.innerText = `${endLocation}\n${endAt ? new Date(endAt).toLocaleString("en-US") : ""}`;
+
+            let accountCell = document.createElement("td");
+            if (!accountID) {
+                accountCell.innerText = "None"
+            } else {
+                let customer = await (await fetch(`/api/v1/accounts/${accountID}`)).json()
+                if (customer.account_details) {
+                    accountCell.innerText = `${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name}`;
+                } else {
+                    accountCell.innerText = `Customer ID ${customer.id}`;
+                }
+            }
+
+            let driverCell = document.createElement("td");
+            if (!driverID) {
+                driverCell.innerText = "None"
+            } else {
+                let driver = await (await fetch(`/api/v1/accounts/${driverID}`)).json()
+                if (driver.account_details) {
+                    driverCell.innerText = `${driver.account_details.first_name} ${driver.account_details.middle_name} ${driver.account_details.last_name}`;
+                } else {
+                    driverCell.innerText = `${driver.username}`;
+                }
+            }
+
+            let vehicleCell = document.createElement("td");
+            if (!vehicleID) {
+                vehicleCell.innerText = "None"
+            } else {
+                let vehicle = await (await fetch(`/api/v1/vehicles/${vehicleID}`)).json()
+                vehicleCell.innerText = `${vehicle.make_model} (${vehicle.type}, ${vehicle.plate_number})`;
+            }
+
+            let actionsCell = document.createElement("td");
+            let viewEditAction = document.createElement("div");
+            viewEditAction.className = "action";
+            viewEditAction.onmousedown = () => { openTripDetailsWindow(id) }
+
+            let viewEditActionIcon = document.createElement("img");
+            viewEditActionIcon.className = "action-icon";
+            viewEditActionIcon.src = "/assets/icons/silk-svg/Magnifier.svg";
+
+            let viewEditActionLabel = document.createElement("span");
+            viewEditActionLabel.innerText = "View/Edit Details";
+
+            viewEditAction.append(viewEditActionIcon, viewEditActionLabel);
+
+            let deleteAction = document.createElement("div");
+            deleteAction.className = "action";
+            deleteAction.onmousedown = () => { deleteTrip(id) }
+
+            let deleteActionIcon = document.createElement("img");
+            deleteActionIcon.className = "action-icon";
+            deleteActionIcon.src = "/assets/icons/silk-svg/Delete.svg";
+
+            let deleteActionLabel = document.createElement("span");
+            deleteActionLabel.innerText = "Delete";
+
+            deleteAction.append(deleteActionIcon, deleteActionLabel);
+
+            actionsCell.append(viewEditAction, deleteAction);
+
+            row.append(idCell, createdAtCell, statusCell, bookingDetailCell, startDetailCell, endDetailCell, accountCell, driverCell, vehicleCell, actionsCell);
+
+            tripsTable.append(row);
+        }
+
+        /**
+         * @param {Date} date
+         */
+        function addVehicleScheduleDay(date) {
+            let month = date.toLocaleDateString("en", { month: "short" })
+            let day = date.getDate();
+
+            let cell = document.querySelector(`[data-m="${date.getMonth() + 1}"][data-d="${day}"]`);
+            if (cell) {
+                // row already exists, clear
+
+                // let cells = document.querySelectorAll(`[data-m="${date.getMonth() + 1}"][data-d="${day}"]`);
+                // cells.forEach(cell => {
+                //     cell.style.backgroundColor = "unset"
+                //     cell.removeAttribute("locked")
+                //     cell.removeAttribute("set")
+                // })
+                return;
+            };
+
+            let tableRow = document.createElement("tr");
+            let dayCell = document.createElement("td");
+            dayCell.innerText = `${month}-${day}`
+            tableRow.append(dayCell)
+
+            for(let i = 0; i < 24; i++) {
+                let hourCell = document.createElement("td");
+                hourCell.dataset.dt = `${date.getMonth() + 1}-${day}-${i}`
+                hourCell.dataset.m = date.getMonth() + 1
+                hourCell.dataset.d = day
+                hourCell.dataset.h = i
+                tableRow.append(hourCell)
+            }
+
+            document.getElementById("vehicleSchedule").append(tableRow)
+        }
+
+        function markVehicleScheduleHour(month, day, hour, color = "blue", locked = true) {
+            let cell = document.querySelector(`[data-m="${month}"][data-d="${day}"][data-h="${hour}"]`)
+
+            if (!cell) {
+                let createDate = new Date(`${new Date().getFullYear()}-${month}-${day}`);
+                addVehicleScheduleDay(createDate);
+                cell = document.querySelector(`[data-m="${month}"][data-d="${day}"][data-h="${hour}"]`)
+            }
+
+            if (cell.dataset.locked == "true" && cell.dataset.set == "true") {
+                document.getElementById("scheduleConflictWarning").style.display = "block"
+                console.log(cell)
+                cell.style.backgroundColor = "red"
+                return;
+            }
+
+            cell.style.backgroundColor = color
+            cell.dataset.locked = locked
+            cell.dataset.set = true
+        }
+
+        function getHoursBetween(startDate, endDate) {
+            const hours = [];
+            let currentDate = new Date(startDate);
+
+            currentDate.setMinutes(0, 0, 0);
+
+            while (currentDate <= endDate) {
+                hours.push(new Date(currentDate));
+                
+                currentDate.setHours(currentDate.getHours() + 1);
+            }
+
+            return hours;
+        }
+
+        /**
+         * @param {Date} startDate
+         * @param {Date} endDate
+         */
+        function markVehicleSchedule(startDate, endDate, locked = true, lockedColor = "#00c3ff") {
+            document.getElementById("scheduleConflictWarning").style.display = "none"
+
+            generateVehicleScheduleBetweenDates(startDate, endDate)
+
+            let hours = getHoursBetween(startDate, endDate);
+            for (let i = 0; i < hours.length; i++) {
+                const hour = hours[i];
+                let month = hour.getMonth() + 1;
+                let day = hour.getDate();
+                let hr = hour.getHours();
+
+                markVehicleScheduleHour(month, day, hr, locked == true ? lockedColor : "green", locked)
+            }
+        }
+
+        function generateVehicleScheduleBetweenDates(startDate, endDate) {
+            console.log(startDate, endDate)
+            let dayBeforeStart = new Date(startDate.getTime() - 86400000);
+            let dayAfterEnd = new Date(endDate.getTime() + 86400000);
+
+            let deltaDays = Math.floor(Math.abs(dayAfterEnd - dayBeforeStart) / 86400000);
+
+            for(let i = 0; i <= deltaDays; i++) {
+                let iterDate = new Date(dayBeforeStart.getTime() + (86400000 * i));
+                addVehicleScheduleDay(iterDate)
+            }
+        }
+
+        function formatDateTimeLocalInput(date) {
+            let dateObj = new Date(parseInt(date))
+            const pad = (num) => String(num).padStart(2, '0');
+    
+            const year = dateObj.getFullYear();
+            const month = pad(dateObj.getMonth() + 1);
+            const day = pad(dateObj.getDate());
+            const hours = pad(dateObj.getHours());
+            const minutes = pad(dateObj.getMinutes());
+
+            let out = `${year}-${month}-${day}T${hours}:${minutes}`
+
+            return out;
+        }
+
+        function openTripCreationWindow() {
+            let form = document.getElementById("tripDetailForm");
+            form.reset();
+
+            document.getElementById("tripDetailIcon").src = "/assets/icons/silk-svg/Map add.svg"
+            document.getElementById("tripDetailHeader").innerText = "Create New Trip"
+
+            document.getElementById("tripBookingType").oninput();
+            document.querySelector(".tripDetailViewContainer").style.display = "unset";
+            document.querySelectorAll("#vehicleSchedule > :not(:first-child)").forEach(element => element.remove())
+        }
+
+        async function openTripDetailsWindow(id) {
+            let form = document.getElementById("tripDetailForm");
+            form.reset();
+
+            let res = await fetch(`/api/v1/trips/${id}`);
+
+            if (res.status != 200) {
+                if (res.status == 404) return alert("Trip not found!");
+                return alert("An error occurred while viewing this trip.")
+            }
+
+            let trip = await res.json();
+
+            document.getElementById("tripDetailIcon").src = "/assets/icons/silk-svg/Map.svg"
+            document.getElementById("tripDetailHeader").innerText = "Trip Details"
+
+            document.getElementById("tripID").value = trip.id;
+            document.getElementById("tripStatus").value = trip.status;
+            document.getElementById("tripBookingType").value = trip.booking_type;
+            document.getElementById("tripBookingType").oninput();
+            document.getElementById("tripServiceType").value = trip.service_type;
+            document.getElementById("tripServiceSubtype").value = trip.service_subtype;
+            document.getElementById("tripAccount").value = trip.account_id;
+            document.getElementById("tripDriver").value = trip.driver_id;
+            document.getElementById("tripVehicle").value = trip.vehicle_id;
+            document.getElementById("tripStartLocation").value = trip.start_location;
+            document.getElementById("tripEndLocation").value = trip.end_location;
+            document.getElementById("tripStartAt").value = trip.start_at;
+            document.getElementById("tripEndAt").value = trip.end_at;
+            document.getElementById("tripLuggageCount").value = trip.luggage_count;
+            document.getElementById("tripPassengerCount").value = trip.passenger_count;
+            document.getElementById("tripFlightNumber").value = trip.flight_number;
+            document.getElementById("tripNote").innerText = trip.note;
+
+            vehicleScheduleChange()
+
+            document.querySelector(".tripDetailViewContainer").style.display = "unset";
+            document.querySelectorAll("#vehicleSchedule > :not(:first-child)").forEach(element => element.remove())
+        }
+
+        async function handletripDetailSubmit() {
+            let id = document.getElementById("tripID").value;
+            let formData = new FormData(document.getElementById("tripDetailForm"))
+            console.log(formData)
+
+            if (id) {
+                let reqJson = {};
+
+                if (formData.has("status")) reqJson.status = formData.get("status");
+                if (formData.has("booking_type")) reqJson.booking_type = formData.get("booking_type");
+                if (formData.has("service_type")) reqJson.service_type = formData.get("service_type");
+                if (formData.has("service_subtype")) reqJson.service_subtype = formData.get("service_subtype");
+                if (formData.get("account_id") != "") reqJson.account_id = formData.get("account_id");
+                if (formData.get("driver_id") != "") reqJson.driver_id = formData.get("driver_id");
+                if (formData.get("vehicle_id") != "") reqJson.vehicle_id = formData.get("vehicle_id");
+                if (formData.get("start_location") != "") reqJson.start_location = formData.get("start_location");
+                if (formData.get("end_location") != "") reqJson.end_location = formData.get("end_location");
+                if (formData.get("start_at") != "") reqJson.start_at = formData.get("start_at");
+                if (formData.get("end_at") != "") reqJson.end_at = formData.get("end_at");
+                if (formData.get("luggage_count") != "") reqJson.luggage_count = formData.get("luggage_count");
+                if (formData.get("passenger_count") != "") reqJson.passenger_count = formData.get("passenger_count");
+                if (formData.get("flight_number") != "") reqJson.flight_number = formData.get("flight_number");
+                if (formData.get("note") != "") reqJson.note = formData.get("note");
+
+                let res = await fetch(`/api/v1/trips/${id}`, {
+                    method: "PATCH",
+                    body: JSON.stringify(reqJson)
+                })
+
+                if (res.status == 200) {
+                    window.alert(`Successfully modified details for trip ${id}.`)
+                    load();
+                    document.querySelector(".tripDetailViewContainer").style.display = "none";
+                }
+            } else {
+                // create new trip
+                let reqJson = {};
+
+                if (formData.has("status")) reqJson.status = formData.get("status");
+                if (formData.has("booking_type")) reqJson.booking_type = formData.get("booking_type");
+                if (formData.has("service_type")) reqJson.service_type = formData.get("service_type");
+                if (formData.has("service_subtype")) reqJson.service_subtype = formData.get("service_subtype");
+                if (formData.get("account_id") != "") reqJson.account_id = formData.get("account_id");
+                if (formData.get("driver_id") != "") reqJson.driver_id = formData.get("driver_id");
+                if (formData.get("vehicle_id") != "") reqJson.vehicle_id = formData.get("vehicle_id");
+                if (formData.get("start_location") != "") reqJson.start_location = formData.get("start_location");
+                if (formData.get("end_location") != "") reqJson.end_location = formData.get("end_location");
+                if (formData.get("start_at") != "") reqJson.start_at = formData.get("start_at");
+                if (formData.get("end_at") != "") reqJson.end_at = formData.get("end_at");
+                if (formData.get("luggage_count") != "") reqJson.luggage_count = formData.get("luggage_count");
+                if (formData.get("passenger_count") != "") reqJson.passenger_count = formData.get("passenger_count");
+                if (formData.get("flight_number") != "") reqJson.flight_number = formData.get("flight_number");
+                if (formData.get("note") != "") reqJson.note = formData.get("note");
+
+                console.log(reqJson)
+
+                let res = await fetch("/api/v1/trips", {
+                    method: "POST",
+                    body: JSON.stringify(reqJson)
+                })
+
+                if (res.status == 201) {
+                    window.alert("Successfully added trip.")
+                    load();
+                    document.querySelector(".tripDetailViewContainer").style.display = "none";
+                }
+            }
+        }
+
+        function deleteTrip(id) {
+            if (confirm(`Are you sure you want to delete trip ${id}?`)) {
+                fetch(`/api/v1/trips/${id}`, {
+                    method: "DELETE"
+                }).then(res => {
+                    load();
+                    if (res.status == 204) return alert("Successfully deleted trip.")
+                    return alert("An error occurred while deleting trip.")
+                })
+            }
+        }
+    </script>
 </body>
 
 </html>

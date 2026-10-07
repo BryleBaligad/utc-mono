@@ -114,23 +114,35 @@ export async function init() {
     try {
         let query: any = db.query("SELECT COUNT(*) AS 'value' FROM sqlite_master WHERE type='table' AND name='trips'").get()
         if (query.value == 0) {
+            /**
+             * Field Details:
+             * 
+             * booking_type:        (transportation | rental)
+             * service_type:        (airport transfer | p2p transfer | panay island tour | taxi service) || (van rental | private car | bridal car | white taxi charter)
+             * service_subtype:     (one way | round trip) || (half day | full day | multi day)
+             */
             db.run(`
             CREATE TABLE trips (
                 id              INTEGER     PRIMARY KEY,
                 status          TEXT        NOT NULL,
-                type            TEXT        NOT NULL,
+                booking_type    TEXT        NOT NULL,
+                service_type    TEXT        NOT NULL,
+                service_subtype TEXT        NOT NULL,
+                created_at      TEXT        NOT NULL,
+                account_id      INTEGER,
                 driver_id       INTEGER,
                 vehicle_id      INTEGER,
-                vehicle_type    TEXT        NOT NULL,
                 start_at        TEXT,
                 end_at          TEXT,
                 start_location  TEXT,
                 end_location    TEXT,
+                luggage_count   INTEGER,
                 passenger_count INTEGER     NOT NULL,
                 flight_number   TEXT,
                 note            TEXT,
                 extra_fields    TEXT,
 
+                FOREIGN KEY (account_id) REFERENCES accounts (id),
                 FOREIGN KEY (driver_id) REFERENCES accounts (id),
                 FOREIGN KEY (vehicle_id) REFERENCES vehicles (id)
             )`)

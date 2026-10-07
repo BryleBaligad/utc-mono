@@ -96,6 +96,37 @@ function generateSidebarByRole(role) {
             break;
         }
 
+        case "manager": {
+            generateSidebar([
+                {
+                    icon: "House",
+                    label: "Home",
+                    page: "home.html",
+                    title: "Dashboard Home",
+                    selected: true
+                },
+                {
+                    icon: "Car",
+                    label: "Fleet",
+                    page: "fleet.html",
+                    title: "Fleet Management"
+                },
+                {
+                    icon: "Map",
+                    label: "Trips",
+                    page: "trips.html",
+                    title: "Trip Management"
+                },
+                {
+                    icon: "Door Out",
+                    label: "Log out",
+                    page: "logout.html",
+                    title: "Log Out"
+                },
+            ])
+            break;
+        }
+
         case "driver": {
             generateSidebar([
                 {

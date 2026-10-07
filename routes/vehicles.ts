@@ -32,7 +32,7 @@ export async function vehiclesGET(req: Bun.BunRequest): Promise<Response> {
         return new Response("401 Unauthorized", { status: 401 })
     }
 
-    if (account.role != "manager" && account.role != "admin") {
+    if (account.role != "manager" && account.role != "admin" && account.role != "driver") {
         return new Response("403 Forbidden", { status: 403 })
     }
 

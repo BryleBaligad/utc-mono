@@ -42,7 +42,10 @@
 
 <body>
     <div class="page-content">
-        <span class="bigtext">Fleet</span><br><br>
+        <span class="bigtext">Fleet</span> &nbsp; 
+        <button class="action" onmousedown="load()">
+            <img class="action-icon" src="/assets/icons/silk-svg/Arrow Rotate CW.svg"><span>Refresh</span>
+        </button><br><br>
         <table id="vehiclesTable">
             <tr>
                 <th>Image</th>
@@ -63,7 +66,7 @@
             <form id="vehicleDetailForm" onsubmit="handleVehicleDetailSubmit(); return false;">
                 <img id="vehicleDetailIcon" src="/assets/icons/silk-svg/Car.svg" width="24" height="24" style="translate: 0 2.5px"> &nbsp;
                 <span id="vehicleDetailHeader" class="bigtext">Vehicle Details</span><br>
-                <center><img src="" id="vehicleImagePreview" onclick="zoomCentre(this, null, 2)" style="max-height: 128px;"></center>
+                <center><img src="" id="vehicleImagePreview" onmousedown="zoomCentre(this, null, 2)" style="max-height: 128px;"></center>
                 Image: <input type="file" accept="image/*" name="image" id="vehicleImage"><br>
                 <span>ID:</span> <input name="id" id="vehicleID" size="5" disabled> &nbsp;
                 Plate Number: <input name="plate_number" id="vehiclePlateNumber" size="6" required> * &nbsp;<br>
@@ -124,7 +127,7 @@
             let imageCell = document.createElement("td");
             let imageCellImg = document.createElement("img")
             imageCellImg.src = `/api/v1/vehicles/${id}/image?${Date.now()}`;
-            imageCellImg.onclick = () => { zoomCentre(imageCellImg, null, 4) }
+            imageCellImg.onmousedown = () => { zoomCentre(imageCellImg, null, 4) }
             imageCell.append(imageCellImg)
 
             let idCell = document.createElement("td");
@@ -268,6 +271,7 @@
             document.getElementById("vehicleDetailHeader").innerText = "Vehicle Details"
             document.querySelector(".vehicleDetailViewContainer").style.display = "unset";
 
+            document.getElementById("vehicleImagePreview").src = ``;
             document.getElementById("vehicleImagePreview").src = `/api/v1/vehicles/${id}/image?${Date.now()}`;
             document.getElementById("vehicleImage").value = "";
             document.getElementById("vehicleID").value = vehicle.id;

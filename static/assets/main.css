@@ -168,6 +168,10 @@ table {
     border-collapse: collapse;
 }
 
+tr:hover {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
 th {
     padding: 4px;
     background-color: beige;
