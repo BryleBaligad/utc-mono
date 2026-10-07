@@ -376,6 +376,11 @@
                     body: JSON.stringify(reqJson)
                 })
 
+                if (res.status == 409) {
+                    window.alert("This user already exists.");
+                    return;
+                }
+
                 if (res.status != 200) {
                     console.log(res.status);
                     window.alert("An error occurred while updating account data.");

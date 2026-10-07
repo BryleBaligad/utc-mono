@@ -5,6 +5,7 @@ import { log } from "./log"
 import { accountsRouter } from "./routes/accounts"
 import { activation } from "./routes/activation"
 import { sessionsRouter } from "./routes/sessions"
+import { vehiclesRouter } from "./routes/vehicles"
 
 await init()
 
@@ -27,7 +28,10 @@ export let server = Bun.serve({
         "/api/v1/accounts/:id": accountsRouter,
         "/api/v1/accounts/:id/details": accountsRouter,
         "/api/v1/accounts/activation": activation,
-        "/api/v1/sessions": sessionsRouter
+        "/api/v1/sessions": sessionsRouter,
+        "/api/v1/vehicles": vehiclesRouter,
+        "/api/v1/vehicles/:id": vehiclesRouter,
+        "/api/v1/vehicles/:id/image": vehiclesRouter
     }
 })
 

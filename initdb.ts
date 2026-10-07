@@ -101,7 +101,7 @@ export async function init() {
                 or_number       TEXT,
                 cr_number       TEXT,
                 registrant_name TEXT,
-                image           BLOB,
+                image           TEXT,
                 note            TEXT,
                 extra_fields    TEXT
             )`)

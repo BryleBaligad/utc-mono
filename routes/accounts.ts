@@ -33,6 +33,8 @@ async function accountsGET(req: Bun.BunRequest): Promise<Response> {
         role = getRoleFromToken(sessionToken)
 
         account = getAccountFromToken(sessionToken)
+    } else {
+        return new Response("401 Unauthorized", { status: 401 })
     }
 
     if (role != "admin") {
@@ -104,6 +106,8 @@ async function accountsDELETE(req: Bun.BunRequest): Promise<Response> {
         role = getRoleFromToken(sessionToken)
 
         account = getAccountFromToken(sessionToken)
+    } else {
+        return new Response("401 Unauthorized", { status: 401 })
     }
 
     if (role != "admin") {
@@ -163,6 +167,8 @@ async function accountsPATCH(req: Bun.BunRequest): Promise<Response> {
         role = getRoleFromToken(sessionToken)
 
         account = getAccountFromToken(sessionToken)
+    } else {
+        return new Response("401 Unauthorized", { status: 401 })
     }
 
     if (!req.params.id) {
@@ -246,6 +252,8 @@ async function accountsPOST(req: Bun.BunRequest): Promise<Response> {
         sessionToken = sessionToken as string
         role = getRoleFromToken(sessionToken)
         reqAccount = getAccountFromToken(sessionToken)
+    } else {
+        return new Response("401 Unauthorized", { status: 401 })
     }
 
     let body: AccountsPOSTRequest = await req.json()

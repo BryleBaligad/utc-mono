@@ -182,3 +182,12 @@ if (window.matchMedia("(pointer: coarse)").matches) {
         document.documentElement.style.setProperty('--sidebar-collapse-animation-duration', '200ms');
     }, 1);
 }
+
+function convertToDataURL(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+    });
+};

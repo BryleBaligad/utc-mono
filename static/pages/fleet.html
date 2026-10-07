@@ -10,12 +10,40 @@
         font-size: x-large;
         font-weight: bold;
     }
+
+    .mediumtext {
+        font-size: medium;
+        font-weight: bold;
+    }
+
+    #vehiclesTable > tr > td > img {
+        height: 64px;
+    }
+
+    .vehicleDetailViewContainer {
+        position: absolute;
+        padding: 32px;
+        top: 94.4px;
+        display: none;
+    }
+
+    #vehicleDetailView {
+        background-color: beige;
+        padding: 16px;
+        border: 1px solid lightgray;
+        font-size: smaller;
+        box-shadow: 0 0 32px rgba(0, 0, 0, 0.25);
+    }
+
+    #vehicleDetailView input {
+        margin-top: 6px;
+    }
 </style>
 
 <body>
     <div class="page-content">
         <span class="bigtext">Fleet</span><br><br>
-        <table id="accountsTable">
+        <table id="vehiclesTable">
             <tr>
                 <th>Image</th>
                 <th>Vehicle ID</th>
@@ -30,6 +58,240 @@
             <img class="action-icon" src="/assets/icons/silk-svg/Car add.svg"><span>Create New Vehicle</span>
         </button>
     </div>
+    <div class="vehicleDetailViewContainer">
+        <div id="vehicleDetailView">
+            <form id="vehicleDetailForm" onsubmit="handleVehicleDetailSubmit(); return false;">
+                <img id="vehicleDetailIcon" src="/assets/icons/silk-svg/Car.svg" width="24" height="24" style="translate: 0 2.5px"> &nbsp;
+                <span id="vehicleDetailHeader" class="bigtext">Vehicle Details</span><br>
+                <center><img src="" id="vehicleImagePreview" onclick="zoomCentre(this, null, 2)" style="max-height: 128px;"></center>
+                Image: <input type="file" accept="image/*" name="image" id="vehicleImage"><br>
+                <span>ID:</span> <input name="id" id="vehicleID" size="5" disabled> &nbsp;
+                Plate Number: <input name="plate_number" id="vehiclePlateNumber" size="6" required> * &nbsp;<br>
+                Make/Model: <input name="make_model" id="vehicleMakeModel" size="12" required> * &nbsp;
+                Type: <input name="type" id="vehicleType" size="14" list="vehicleTypes" placeholder="Sedan, Van, etc." required> * &nbsp;
+                <datalist id="vehicleTypes">
+                    <option value="Sedan">
+                    <option value="Hatchback">
+                    <option value="Crossover">
+                    <option value="SUV">
+                    <option value="Minivan">
+                    <option value="Van">
+                </datalist><br>
+                OR Number: <input name="or_number" id="vehicleORNumber" size="10"> &nbsp;
+                CR Number: <input name="cr_number" id="vehicleCRNumber" size="10"><br>
+                Registrant: <input name="registrant" id="vehicleRegistrant" size="16"> &nbsp;
+                <br><br>
+                Note<br>
+                <textarea id="vehicleNote" name="note"></textarea>
+                <div style="display: flex; justify-content: flex-end; width: 100%;">
+                    <button class="action" type="button" id="vehicleDetailClose">
+                        <img class="action-icon" src="/assets/icons/silk-svg/Cancel.svg">
+                        <span>Close</span>
+                    </button> &nbsp;
+                    <button class="action" type="submit">
+                        <img class="action-icon" src="/assets/icons/silk-svg/Accept.svg">
+                        <span>Submit</span>
+                    </button> &nbsp;
+                </div>
+            </form>
+        </div>
+    </div>
+    <script defer src="/assets/zoomCentre.js"></script>
+    <script>
+        function load() {
+            fetch("/api/v1/vehicles").then(async res => {
+                if (res.status == 403) {
+                    generateSidebarByRole("");
+                    return;
+                }
+
+                document.querySelectorAll("#vehiclesTable > :not(:first-child)").forEach(element => element.remove())
+
+                let json = await res.json();
+                for (let i = 0; i < json.length; i++) {
+                    const vehicle = json[i];
+                    addVehiclesToTableRow(vehicle.id, vehicle.plate_number, vehicle.make_model, vehicle.type)
+                }
+            })
+        }
+
+        load()
+
+        function addVehiclesToTableRow(id, plateNumber, makeModel, type) {
+            let vehiclesTable = document.getElementById("vehiclesTable");
+            let row = document.createElement("tr");
+
+            let imageCell = document.createElement("td");
+            let imageCellImg = document.createElement("img")
+            imageCellImg.src = `/api/v1/vehicles/${id}/image?${Date.now()}`;
+            imageCellImg.onclick = () => { zoomCentre(imageCellImg, null, 4) }
+            imageCell.append(imageCellImg)
+
+            let idCell = document.createElement("td");
+            idCell.innerText = id;
+
+            let plateNumberCell = document.createElement("td");
+            plateNumberCell.innerText = plateNumber;
+
+            let makeModelCell = document.createElement("td");
+            makeModelCell.innerText = makeModel;
+
+            let typeCell = document.createElement("td");
+            typeCell.innerText = type;
+
+            let actionsCell = document.createElement("td");
+            let viewEditAction = document.createElement("div");
+            viewEditAction.className = "action";
+            viewEditAction.onmousedown = () => { openVehicleDetailsWindow(id) }
+            viewEditAction.style.display = "block"
+
+            let viewEditActionIcon = document.createElement("img");
+            viewEditActionIcon.className = "action-icon";
+            viewEditActionIcon.src = "/assets/icons/silk-svg/Magnifier.svg";
+
+            let viewEditActionLabel = document.createElement("span");
+            viewEditActionLabel.innerText = "View/Edit Details";
+
+            viewEditAction.append(viewEditActionIcon, viewEditActionLabel);
+
+            let deleteAction = document.createElement("div");
+            deleteAction.className = "action";
+            deleteAction.onmousedown = () => { deleteVehicle(id) }
+
+            let deleteActionIcon = document.createElement("img");
+            deleteActionIcon.className = "action-icon";
+            deleteActionIcon.src = "/assets/icons/silk-svg/Delete.svg";
+
+            let deleteActionLabel = document.createElement("span");
+            deleteActionLabel.innerText = "Delete";
+
+            deleteAction.append(deleteActionIcon, deleteActionLabel);
+
+            actionsCell.append(viewEditAction, deleteAction);
+
+            row.append(imageCell, idCell, plateNumberCell, makeModelCell, typeCell, actionsCell);
+
+            vehiclesTable.append(row);
+        }
+
+
+        document.getElementById("vehicleDetailClose").onmousedown = () => {
+            document.querySelector(".vehicleDetailViewContainer").style.display = "none";
+        }
+
+        document.getElementById("vehicleImage").oninput = async (evt) => {
+            let preview = document.getElementById("vehicleImagePreview");
+            preview.src = await convertToDataURL(evt.target.files[0])
+        }
+
+        async function handleVehicleDetailSubmit() {
+            let id = document.getElementById("vehicleID").value;
+            let formData = new FormData(document.getElementById("vehicleDetailForm"))
+            if (id) {
+                console.log("I am editing a vehicle!")
+
+                let reqJson = {};
+                if (formData.has("plate_number")) reqJson.plate_number = formData.get("plate_number");
+                if (formData.has("make_model")) reqJson.make_model = formData.get("make_model");
+                if (formData.has("type")) reqJson.type = formData.get("type");
+                if (formData.has("or_number")) reqJson.or_number = formData.get("or_number");
+                if (formData.has("cr_number")) reqJson.cr_number = formData.get("cr_number");
+                if (formData.has("registrant")) reqJson.registrant_name = formData.get("registrant");
+                if (formData.has("image")) reqJson.image = await convertToDataURL(formData.get("image"))
+                if (formData.has("note")) reqJson.note = formData.get("note");
+
+                console.log(reqJson)
+
+                let res = await fetch(`/api/v1/vehicles/${id}`, {
+                    method: "PATCH",
+                    body: JSON.stringify(reqJson)
+                })
+
+                if (res.status == 200) {
+                    window.alert("Successfully updated vehicle details.")
+                    load();
+                    document.querySelector(".vehicleDetailViewContainer").style.display = "none";
+                }
+            } else {
+                // create new vehicle
+                let reqJson = {};
+                if (formData.has("plate_number")) reqJson.plate_number = formData.get("plate_number");
+                if (formData.has("make_model")) reqJson.make_model = formData.get("make_model");
+                if (formData.has("type")) reqJson.type = formData.get("type");
+                if (formData.has("or_number")) reqJson.or_number = formData.get("or_number");
+                if (formData.has("cr_number")) reqJson.cr_number = formData.get("cr_number");
+                if (formData.has("registrant")) reqJson.registrant_name = formData.get("registrant");
+                if (formData.has("image")) reqJson.image = await convertToDataURL(formData.get("image"))
+                if (formData.has("note")) reqJson.note = formData.get("note");
+
+                let res = await fetch("/api/v1/vehicles", {
+                    method: "POST",
+                    body: JSON.stringify(reqJson)
+                })
+
+                if (res.status == 201) {
+                    window.alert("Successfully added vehicle.")
+                    load();
+                    document.querySelector(".vehicleDetailViewContainer").style.display = "none";
+                }
+            }
+        }
+
+        function openVehicleCreationWindow() {
+            document.getElementById("vehicleDetailIcon").src = "/assets/icons/silk-svg/Car add.svg"
+            document.getElementById("vehicleDetailHeader").innerText = "Create New Vehicle"
+            document.querySelector(".vehicleDetailViewContainer").style.display = "unset";
+
+            document.getElementById("vehicleImagePreview").src = "";
+            document.getElementById("vehicleImage").value = "";
+            document.getElementById("vehicleID").value = "";
+            document.getElementById("vehiclePlateNumber").value = "";
+            document.getElementById("vehicleMakeModel").value = "";
+            document.getElementById("vehicleType").value = "";
+            document.getElementById("vehicleORNumber").value = "";
+            document.getElementById("vehicleCRNumber").value = "";
+            document.getElementById("vehicleRegistrant").value = "";
+            document.getElementById("vehicleNote").innerText = "";
+        }
+
+        async function openVehicleDetailsWindow(id) {
+            let res = await fetch(`/api/v1/vehicles/${id}`);
+
+            if (res.status != 200) {
+                if (res.status == 404) return alert("Vehicle not found!");
+                return alert("An error occurred while viewing this vehicle.")
+            }
+
+            let vehicle = await res.json();
+
+            document.getElementById("vehicleDetailIcon").src = "/assets/icons/silk-svg/Car.svg"
+            document.getElementById("vehicleDetailHeader").innerText = "Vehicle Details"
+            document.querySelector(".vehicleDetailViewContainer").style.display = "unset";
+
+            document.getElementById("vehicleImagePreview").src = `/api/v1/vehicles/${id}/image?${Date.now()}`;
+            document.getElementById("vehicleImage").value = "";
+            document.getElementById("vehicleID").value = vehicle.id;
+            document.getElementById("vehiclePlateNumber").value = vehicle.plate_number;
+            document.getElementById("vehicleMakeModel").value = vehicle.make_model;
+            document.getElementById("vehicleType").value = vehicle.type;
+            document.getElementById("vehicleORNumber").value = vehicle.or_number;
+            document.getElementById("vehicleCRNumber").value = vehicle.cr_number;
+            document.getElementById("vehicleRegistrant").value = vehicle.registrant_name;
+            document.getElementById("vehicleNote").innerText = vehicle.note;
+        }
+
+        function deleteVehicle(id) {
+            if (confirm(`Are you sure you want to delete vehicle ${id}?`)) {
+                fetch(`/api/v1/vehicles/${id}`, {
+                    method: "DELETE"
+                }).then(res => {
+                    load();
+                    if (res.status == 204) return alert("Successfully deleted vehicle.")
+                    return alert("An error occurred while deleting vehicle.")
+                })
+            }
+        }
+    </script>
 </body>
 
 </html>
