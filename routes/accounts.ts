@@ -10,19 +10,28 @@ import { verifySession } from "../util/sessions/verifySession"
 import type { AccountsPOSTRequest } from "./accounts.types"
 
 export async function accountsRouter(req: Bun.BunRequest): Promise<Response> {
+    let res = new Response("400 Bad Request", { status: 400 });
+
     switch(req.method) {
         case "GET":
-            return accountsGET(req)
+            res = await accountsGET(req)
+            break
         case "DELETE":
-            return accountsDELETE(req)
+            res = await accountsDELETE(req)
+            break
         case "PATCH":
-            return accountsPATCH(req)
+            res = await accountsPATCH(req)
+            break
         case "POST":
-            return accountsPOST(req)
+            res = await accountsPOST(req)
+            break
         case "OPTIONS":
-            return sendCORSOptions()
+            res = await sendCORSOptions()
     }
-    return new Response("400 Bad Request", { status: 400 })
+
+    res.headers.set("Access-Control-Allow-Origin", "*")
+
+    return res
 }
 
 async function accountsGET(req: Bun.BunRequest): Promise<Response> {
