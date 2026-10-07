@@ -91,10 +91,11 @@ async function sessionsPOST(req: Bun.BunRequest): Promise<Response> {
         }
 
         req.cookies.set("UTC-Session", newSessionToken, {
-            httpOnly: true,
+            // httpOnly: true,
             maxAge: 900,
             path: "/",
-            sameSite: "lax"
+            sameSite: "lax",
+            domain: "baligad.net"
         })
 
         log(`${censor(body.username, 2)} (${getIPFromRequest(req)}) logged in`)
