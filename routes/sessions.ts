@@ -42,7 +42,7 @@ async function sessionsGET(req: Bun.BunRequest): Promise<Response> {
             maxAge: 900,
             path: "/",
             sameSite: "none",
-            domain: ".baligad.net",
+            domain: "dashboard.baligad.net",
             secure: true
         })
 
@@ -109,7 +109,7 @@ async function sessionsPOST(req: Bun.BunRequest): Promise<Response> {
             maxAge: 900,
             path: "/",
             sameSite: "none",
-            domain: ".baligad.net",
+            domain: "dashboard.baligad.net",
             secure: true
         })
 
