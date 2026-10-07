@@ -112,7 +112,7 @@ async function sessionsPOST(req: Bun.BunRequest): Promise<Response> {
 
         log(`${censor(body.username, 2)} (${getIPFromRequest(req)}) logged in`)
 
-        return Response.json({ role: getRoleFromToken(newSessionToken) })
+        return Response.json({ role: getRoleFromToken(newSessionToken), id: getAccountFromToken(newSessionToken).id })
     }
 
     return new Response("400 Bad Request", { status: 400 })
