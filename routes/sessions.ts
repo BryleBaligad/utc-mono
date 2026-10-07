@@ -1,3 +1,4 @@
+import { sendCORSOptions } from ".."
 import { getDb } from "../db"
 import { censor, log } from "../log"
 import { getIPFromRequest } from "../util/getIPFromRequest"
@@ -13,6 +14,8 @@ export async function sessionsRouter(req: Bun.BunRequest): Promise<Response> {
             return sessionsPOST(req)
         case "DELETE":
             return sessionsDELETE(req)
+        case "OPTIONS":
+            return sendCORSOptions()
     }
     return new Response("400 Bad Request", { status: 400 })
 }

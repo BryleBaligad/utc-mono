@@ -38,4 +38,13 @@ export let server = Bun.serve({
     }
 })
 
+export function sendCORSOptions() {
+    return new Response(null, {
+        headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET, POST, PATCH, DELETE, OPTIONS"
+        }
+    })
+}
+
 log(`Started API v1 on port ${server.port}`)

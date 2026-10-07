@@ -1,3 +1,4 @@
+import { sendCORSOptions } from ".."
 import { getDb } from "../db"
 import { censor, log } from "../log"
 import { getIPFromRequest } from "../util/getIPFromRequest"
@@ -14,6 +15,8 @@ export async function vehiclesRouter(req: Bun.BunRequest): Promise<Response> {
             return vehiclesPATCH(req)
         case "DELETE":
             return vehiclesDELETE(req)
+        case "OPTIONS":
+            return sendCORSOptions()
     }
     return new Response("400 Bad Request", { status: 400 })
 }
