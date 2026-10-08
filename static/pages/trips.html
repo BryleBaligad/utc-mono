@@ -395,7 +395,7 @@
             }
 
             let bookingDetailCell = document.createElement("td");
-            bookingDetailCell.innerText = `${bookingType}\n${serviceType} - ${serviceSubtype}`;
+            bookingDetailCell.innerText = `${bookingType}\n${serviceType}\n${serviceSubtype}`;
 
             let startDetailCell = document.createElement("td");
             startDetailCell.innerText = `${startLocation}\n${startAt ? new Date(startAt).toLocaleString("en-US").replace(", ", "\n") : ""}`;
