@@ -357,6 +357,30 @@ async function accountsPOST(req: Bun.BunRequest): Promise<Response> {
 
         let account: any = db.query("SELECT * FROM accounts WHERE username = ?").get(body.username)
 
+        if (body.account_details) {
+            db.query(`
+                INSERT INTO account_details (
+                    account_id,
+                    first_name, 
+                    middle_name, 
+                    last_name, 
+                    mobile_number,
+                    email_address,
+                    note,
+                    extra_fields
+                ) VALUES (
+                    ?, 
+                    ?, 
+                    ?, 
+                    ?, 
+                    ?, 
+                    ?, 
+                    ?, 
+                    ?
+                )`)
+            .run(account.id, body.account_details.first_name, body.account_details.middle_name, body.account_details.last_name, body.account_details.mobile_number, body.account_details.email_address, body.account_details.note, body.account_details.additional_fields)
+        }
+
         sendActivationEmail(body.username, activationCode, new Brevo())
 
         return new Response("201 Created", { 
