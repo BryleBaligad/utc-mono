@@ -395,13 +395,13 @@
             }
 
             let bookingDetailCell = document.createElement("td");
-            bookingDetailCell.innerText = `Booking Type: ${bookingType}\nService Type: ${serviceType}\nSubtype: ${serviceSubtype}`;
+            bookingDetailCell.innerText = `${bookingType}\n${serviceType} - ${serviceSubtype}`;
 
             let startDetailCell = document.createElement("td");
-            startDetailCell.innerText = `${startLocation}\n${startAt ? new Date(startAt).toLocaleString("en-US") : ""}`;
+            startDetailCell.innerText = `${startLocation}\n${startAt ? new Date(startAt).toLocaleString("en-US").replace(", ", "\n") : ""}`;
 
             let endDetailCell = document.createElement("td");
-            endDetailCell.innerText = `${endLocation}\n${endAt ? new Date(endAt).toLocaleString("en-US") : ""}`;
+            endDetailCell.innerText = `${endLocation}\n${endAt ? new Date(endAt).toLocaleString("en-US").replace(", ", "\n") : ""}`;
 
             let accountCell = document.createElement("td");
             if (!accountID) {
