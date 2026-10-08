@@ -54,8 +54,23 @@ async function accountsGET(req: Bun.BunRequest): Promise<Response> {
     }
 
     if (role == "customer" && req.params.id == reqAccount.id) {
-        console.log(role, req.params.id, reqAccount.id)
-        return Response.json(reqAccount)
+        let responseJson = {
+            id: reqAccount.id,
+            username: reqAccount.username,
+            role: reqAccount.role,
+            activated: reqAccount.activated == 1 ? "Yes" : "No",
+            created_at: new Date(parseInt(reqAccount.created_at)).toLocaleString("sv"),
+            name: reqAccount.name,
+            account_details: null
+        }
+
+        let accountDetails: any = db.query("SELECT first_name, middle_name, last_name, mobile_number, email_address, note, extra_fields FROM account_details WHERE account_id = ?").get(reqAccount.id)
+
+        if (accountDetails) {
+            responseJson.account_details = accountDetails
+        }
+        
+        return Response.json(responseJson)
     }
 
     if (role != "admin" && role != "manager" && role != "driver") {
