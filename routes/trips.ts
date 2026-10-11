@@ -6,19 +6,31 @@ import { getAccountFromToken } from "../util/sessions/getAccountFromToken"
 import { verifySession } from "../util/sessions/verifySession"
 
 export async function tripsRouter(req: Bun.BunRequest): Promise<Response> {
+    let res = new Response("400 Bad Request", { status: 400 })
     switch(req.method) {
         case "GET":
-            return tripsGET(req)
+            res = await tripsGET(req)
+            break
         case "POST":
-            return tripsPOST(req)
+            res = await tripsPOST(req)
+            break
         case "PATCH":
-            return tripsPATCH(req)
+            res = await tripsPATCH(req)
+            break
         case "DELETE":
-            return tripsDELETE(req)
+            res = await tripsDELETE(req)
+            break
         case "OPTIONS":
-            return sendCORSOptions()
+            res = await sendCORSOptions()
+            break
     }
-    return new Response("400 Bad Request", { status: 400 })
+
+    res.headers.set("Access-Control-Allow-Credentials", "true")
+    if (req.headers.get("Origin")?.includes("baligad.net")) {
+        res.headers.set("Access-Control-Allow-Origin", req.headers.get("Origin") || "*")
+    }
+
+    return res
 }
 
 export async function tripsGET(req: Bun.BunRequest): Promise<Response> {
