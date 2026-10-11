@@ -82,9 +82,7 @@ export async function tripsGET(req: Bun.BunRequest): Promise<Response> {
     }
 
     let trips: any
-    console.log("ACCOUNT ROLE: ", account.role)
     if (account.role == "customer") {
-        console.log("CUSTOMER GETTING TRIPS")
         trips = db.query("SELECT * FROM trips WHERE account_id = ? ORDER BY id DESC").all(account.id);
     } else if (account.role == "driver") {
         trips = db.query("SELECT * FROM trips WHERE driver_id = ? ORDER BY id DESC").all(account.id);
