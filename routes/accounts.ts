@@ -310,7 +310,9 @@ async function accountsPOST(req: Bun.BunRequest): Promise<Response> {
         role = getRoleFromToken(sessionToken)
         reqAccount = getAccountFromToken(sessionToken)
     } else {
-        return new Response("401 Unauthorized", { status: 401 })
+        if (sessionToken) {
+            return new Response("401 Unauthorized", { status: 401 })
+        }
     }
 
     let body: AccountsPOSTRequest = await req.json()
