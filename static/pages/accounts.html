@@ -398,13 +398,18 @@
 
         async function deleteAccount(id) {
             if (window.confirm(`Are you sure you want to delete account ID ${id}?`)) {
-                let res = fetch(`/api/v1/accounts/${id}`, {
+                let res = await fetch(`/api/v1/accounts/${id}`, {
                     method: "DELETE"
                 })
 
-                window.alert("Successfully deleted account.")
-                load();
-                document.querySelector(".accountDetailViewContainer").style.display = "none";
+                if (res.status == 204) {
+                    window.alert("Successfully deleted account.")
+                    load();
+                    document.querySelector(".accountDetailViewContainer").style.display = "none";
+                } else {
+                    window.alert("Failed to delete account. The account may be linked to trips.")
+                }
+
             }
         }
     </script>
