@@ -665,7 +665,7 @@
                 if (formData.get("luggage_count") != "") reqJson.luggage_count = formData.get("luggage_count");
                 if (formData.get("passenger_count") != "") reqJson.passenger_count = formData.get("passenger_count");
                 if (formData.get("flight_number") != "") reqJson.flight_number = formData.get("flight_number");
-                if (formData.get("note") != "") reqJson.note = formData.get("note").replace(/\n/g, "<br>");
+                if (formData.get("note") != "") reqJson.note = formData.get("note");
 
                 let res = await fetch(`/api/v1/trips/${id}`, {
                     method: "PATCH",
@@ -695,7 +695,7 @@
                 if (formData.get("luggage_count") != "") reqJson.luggage_count = formData.get("luggage_count");
                 if (formData.get("passenger_count") != "") reqJson.passenger_count = formData.get("passenger_count");
                 if (formData.get("flight_number") != "") reqJson.flight_number = formData.get("flight_number");
-                if (formData.get("note") != "") reqJson.note = formData.get("note").replace(/\n/g, "<br>");
+                if (formData.get("note") != "") reqJson.note = formData.get("note");
 
                 console.log(reqJson)
 
