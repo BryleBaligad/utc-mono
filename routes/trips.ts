@@ -192,7 +192,7 @@ export async function tripsPATCH(req: Bun.BunRequest): Promise<Response> {
     if (body.booking_type) db.query("UPDATE trips SET booking_type = ? WHERE id = ?").run(body.booking_type, req.params.id)
     if (body.service_type) db.query("UPDATE trips SET service_type = ? WHERE id = ?").run(body.service_type, req.params.id)
     if (body.service_subtype) db.query("UPDATE trips SET service_subtype = ? WHERE id = ?").run(body.service_subtype, req.params.id)
-    if (body.account_id) db.query("UPDATE trips SET account_id = ? WHERE id = ?").run(body.account_id, req.params.id)
+    if ("account_id" in body) db.query("UPDATE trips SET account_id = ? WHERE id = ?").run(body.account_id, req.params.id)
     if (body.driver_id) db.query("UPDATE trips SET driver_id = ? WHERE id = ?").run(body.driver_id, req.params.id)
     if (body.vehicle_id) db.query("UPDATE trips SET vehicle_id = ? WHERE id = ?").run(body.vehicle_id, req.params.id)
     if (body.start_at) db.query("UPDATE trips SET start_at = ? WHERE id = ?").run(body.start_at, req.params.id)
