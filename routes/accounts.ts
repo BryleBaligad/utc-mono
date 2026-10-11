@@ -30,6 +30,7 @@ export async function accountsRouter(req: Bun.BunRequest): Promise<Response> {
     }
 
     res.headers.set("Access-Control-Allow-Credentials", "true")
+    res.headers.set("Access-Control-Expose-Headers", "Location")
     if (req.headers.get("Origin")?.includes("baligad.net")) {
         res.headers.set("Access-Control-Allow-Origin", req.headers.get("Origin") || "*")
     }
