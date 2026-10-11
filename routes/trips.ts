@@ -182,7 +182,11 @@ export async function tripsPATCH(req: Bun.BunRequest): Promise<Response> {
         return new Response("404 Not Found", { status: 404 })
     }
 
-    if (currentTrip.account_id != account.id || (account.role != "manager" || account.role != "admin")) {
+    if (account.role == "customer" && currentTrip.account_id != account.id) {
+        return new Response("403 Forbidden", { status: 403 })
+    }
+
+    if (account.role != "manager" && account.role != "admin") {
         return new Response("403 Forbidden", { status: 403 })
     }
 
