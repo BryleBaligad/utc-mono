@@ -655,17 +655,17 @@
                 if (formData.has("booking_type")) reqJson.booking_type = formData.get("booking_type");
                 if (formData.has("service_type")) reqJson.service_type = formData.get("service_type");
                 if (formData.has("service_subtype")) reqJson.service_subtype = formData.get("service_subtype");
-                if (formData.get("account_id") != "") reqJson.account_id = formData.get("account_id");
-                if (formData.get("driver_id") != "") reqJson.driver_id = formData.get("driver_id");
-                if (formData.get("vehicle_id") != "") reqJson.vehicle_id = formData.get("vehicle_id");
-                if (formData.get("start_location") != "") reqJson.start_location = formData.get("start_location");
-                if (formData.get("end_location") != "") reqJson.end_location = formData.get("end_location");
-                if (formData.get("start_at") != "") reqJson.start_at = formData.get("start_at");
-                if (formData.get("end_at") != "") reqJson.end_at = formData.get("end_at");
-                if (formData.get("luggage_count") != "") reqJson.luggage_count = formData.get("luggage_count");
+                if (formData.has("account_id")) reqJson.account_id = formData.get("account_id");
+                if (formData.has("driver_id")) reqJson.driver_id = formData.get("driver_id");
+                if (formData.has("vehicle_id")) reqJson.vehicle_id = formData.get("vehicle_id");
+                if (formData.has("start_location")) reqJson.start_location = formData.get("start_location");
+                if (formData.has("end_location")) reqJson.end_location = formData.get("end_location");
+                if (formData.has("start_at")) reqJson.start_at = formData.get("start_at");
+                if (formData.has("end_at")) reqJson.end_at = formData.get("end_at");
+                if (formData.has("luggage_count")) reqJson.luggage_count = formData.get("luggage_count");
                 if (formData.get("passenger_count") != "") reqJson.passenger_count = formData.get("passenger_count");
-                if (formData.get("flight_number") != "") reqJson.flight_number = formData.get("flight_number");
-                if (formData.get("note") != "") reqJson.note = formData.get("note");
+                if (formData.has("flight_number")) reqJson.flight_number = formData.get("flight_number");
+                if (formData.has("note")) reqJson.note = formData.get("note");
 
                 let res = await fetch(`/api/v1/trips/${id}`, {
                     method: "PATCH",
@@ -685,17 +685,17 @@
                 if (formData.has("booking_type")) reqJson.booking_type = formData.get("booking_type");
                 if (formData.has("service_type")) reqJson.service_type = formData.get("service_type");
                 if (formData.has("service_subtype")) reqJson.service_subtype = formData.get("service_subtype");
-                if (formData.get("account_id") != "") reqJson.account_id = formData.get("account_id");
-                if (formData.get("driver_id") != "") reqJson.driver_id = formData.get("driver_id");
-                if (formData.get("vehicle_id") != "") reqJson.vehicle_id = formData.get("vehicle_id");
-                if (formData.get("start_location") != "") reqJson.start_location = formData.get("start_location");
-                if (formData.get("end_location") != "") reqJson.end_location = formData.get("end_location");
-                if (formData.get("start_at") != "") reqJson.start_at = formData.get("start_at");
-                if (formData.get("end_at") != "") reqJson.end_at = formData.get("end_at");
-                if (formData.get("luggage_count") != "") reqJson.luggage_count = formData.get("luggage_count");
+                if (formData.has("account_id")) reqJson.account_id = formData.get("account_id");
+                if (formData.has("driver_id")) reqJson.driver_id = formData.get("driver_id");
+                if (formData.has("vehicle_id")) reqJson.vehicle_id = formData.get("vehicle_id");
+                if (formData.has("start_location")) reqJson.start_location = formData.get("start_location");
+                if (formData.has("end_location")) reqJson.end_location = formData.get("end_location");
+                if (formData.has("start_at")) reqJson.start_at = formData.get("start_at");
+                if (formData.has("end_at")) reqJson.end_at = formData.get("end_at");
+                if (formData.has("luggage_count")) reqJson.luggage_count = formData.get("luggage_count");
                 if (formData.get("passenger_count") != "") reqJson.passenger_count = formData.get("passenger_count");
-                if (formData.get("flight_number") != "") reqJson.flight_number = formData.get("flight_number");
-                if (formData.get("note") != "") reqJson.note = formData.get("note");
+                if (formData.has("flight_number")) reqJson.flight_number = formData.get("flight_number");
+                if (formData.has("note")) reqJson.note = formData.get("note");
 
                 console.log(reqJson)
 
