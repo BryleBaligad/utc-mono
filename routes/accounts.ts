@@ -232,7 +232,7 @@ async function accountsPATCH(req: Bun.BunRequest): Promise<Response> {
         return new Response("400 Bad Request", { status: 400 })
     }
 
-    if (role != "admin" || (role != "admin" && req.params.id != account.id)) {
+    if (role != "admin" && req.params.id != account.id) {
         if (account) {
             log(`User ${censor(account.username, 2)} (${getIPFromRequest(req)}) attempted updating account ${req.params.id}`)
         } else {
