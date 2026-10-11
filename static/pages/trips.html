@@ -71,7 +71,7 @@
                 Status: <select name="status" id="tripStatus" required>
                     <option selected>CREATED</option>
                     <option>NEGOTIATING</option>
-                    <option>ACTIVE</option>
+                    <option>CONFIRMED</option>
                     <option>COMPLETED</option>
                     <option>CANCELLED</option>
                 </select> * &nbsp;
@@ -390,6 +390,7 @@
             switch (status) {
                 case "NEGOTIATING": statusCell.style.backgroundColor = "#00c3ff"; break;
                 case "ACTIVE": statusCell.style.backgroundColor = "yellow"; break;
+                case "CONFIRMED": statusCell.style.backgroundColor = "yellow"; break;
                 case "COMPLETED": statusCell.style.backgroundColor = "lime"; break;
                 case "CANCELLED": statusCell.style.backgroundColor = "red"; break;
             }
