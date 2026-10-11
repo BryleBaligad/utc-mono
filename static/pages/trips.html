@@ -635,7 +635,7 @@
             document.getElementById("tripLuggageCount").value = trip.luggage_count;
             document.getElementById("tripPassengerCount").value = trip.passenger_count;
             document.getElementById("tripFlightNumber").value = trip.flight_number;
-            document.getElementById("tripNote").value = trip.note;
+            document.getElementById("tripNote").value = trip.note.replaceAll("<br>", "\n");
 
             vehicleScheduleChange()
 
