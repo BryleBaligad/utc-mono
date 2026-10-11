@@ -172,18 +172,18 @@ export async function tripsPATCH(req: Bun.BunRequest): Promise<Response> {
         account = getAccountFromToken(sessionToken)
     }
 
-    if (account.role != "manager" && account.role != "admin") {
-        return new Response("403 Forbidden", { status: 403 })
-    }
-
     if (!req.params.id) {
         return new Response("400 Bad Request", { status: 400 })
     }
 
-    let currentTrip = db.query("SELECT * FROM trips WHERE id = ?").get(req.params.id)
+    let currentTrip: any = db.query("SELECT * FROM trips WHERE id = ?").get(req.params.id)
 
     if (!currentTrip) {
         return new Response("404 Not Found", { status: 404 })
+    }
+
+    if (currentTrip.account_id != account.id && (account.role != "manager" || account.role != "admin")) {
+        return new Response("403 Forbidden", { status: 403 })
     }
 
     let body = await req.json()
