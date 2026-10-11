@@ -33,7 +33,7 @@ body {
 .main-container {
     display: grid;
     grid-template-columns: 10em auto;
-    grid-template-rows: calc(100vh - 64px) 64px;
+    grid-template-rows: auto 64px;
     transition: grid-template-columns var(--sidebar-collapse-animation-duration) ease;
 }
 
@@ -46,7 +46,8 @@ body {
     padding-top: 16px;
     padding-left: 12px;
     border-right: solid 2px lightgray;
-    transition: padding-left var(--sidebar-collapse-animation-duration) ease, padding-top var(--sidebar-collapse-animation-duration) ease;
+    transition: padding-left var(--sidebar-collap1se-animation-duration) ease, padding-top var(--sidebar-collapse-animation-duration) ease;
+    min-height: calc(100vh - 112px);
 }
 
 .main-container.collapse .sidebar {
