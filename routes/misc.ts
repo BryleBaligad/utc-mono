@@ -42,8 +42,7 @@ export async function miscGET(req: Bun.BunRequest): Promise<Response> {
     let search = new URL(req.url).searchParams
     // bodge for getting misc details
     if (search.has("homekpi")) {
-        if (account.role != "admin" || account.role != "manager") {
-            console.log("role not right!!!")
+        if (account.role != "admin" && account.role != "manager") {
             return new Response("403 Forbidden", { status: 403 })
         }
 
