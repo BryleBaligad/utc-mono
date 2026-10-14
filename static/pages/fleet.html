@@ -381,7 +381,56 @@
 
             console.log(json)
 
-            let tr = document.createElement("tr");
+            if (json.maintenance) {
+                for (let i = 0; i < json.maintenance.length; i++) {
+                    const maintenance = json.maintenance[i];
+                    let tr = document.createElement("tr");
+        
+                    let dateTD = document.createElement("td");
+                    dateTD.innerText = new Date(maintenance.date_time).toLocaleString("sv")
+                    tr.append(dateTD)
+
+                    let odoTD = document.createElement("td");
+                    odoTD.innerText = maintenance.odometer
+                    tr.append(odoTD)
+
+                    let typeTD = document.createElement("td");
+                    typeTD.innerText = maintenance.type
+                    tr.append(typeTD)
+
+                    let descriptionTD = document.createElement("td");
+                    descriptionTD.innerText = maintenance.description
+                    tr.append(descriptionTD)
+
+                    let costTD = document.createElement("td");
+                    costTD.innerText = "₱" + parseFloat(maintenance.cost).toFixed(2)
+                    tr.append(costTD)
+
+                    let serviceByTD = document.createElement("td");
+                    serviceByTD.innerText = maintenance.service_by
+                    tr.append(serviceByTD)
+
+                    let actionsCell = document.createElement("td");
+                    let deleteAction = document.createElement("div");
+                    deleteAction.className = "action";
+                    deleteAction.onmousedown = () => { deleteVehicleMaintenance(id, index) }
+
+                    let deleteActionIcon = document.createElement("img");
+                    deleteActionIcon.className = "action-icon";
+                    deleteActionIcon.src = "/assets/icons/silk-svg/Delete.svg";
+
+                    let deleteActionLabel = document.createElement("span");
+                    deleteActionLabel.innerText = "Delete";
+
+                    deleteAction.append(deleteActionIcon, deleteActionLabel);
+
+                    actionsCell.append(deleteAction);
+
+                    tr.append(actionsCell)
+                    vehicleMaintenanceTable.append(tr)
+                }
+            }
+
         }
 
         function openVehicleMaintenanceAddMenu(id) {
