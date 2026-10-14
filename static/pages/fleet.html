@@ -27,6 +27,12 @@
         display: none;
     }
 
+    .vehicleMaintenanceViewContainer {
+        position: absolute;
+        padding: 32px;
+        top: 94.4px;
+    }
+
     #vehicleDetailView {
         background-color: beige;
         padding: 16px;
@@ -110,8 +116,19 @@
                     <th>Description</th>
                     <th>Total Cost</th>
                     <th>Serviced By</th>
+                    <th>Action</th>
                 </tr>
             </table>
+            <div style="display: flex; justify-content: flex-end; width: 100%;">
+                <button class="action" type="button" id="vehicleMaintenanceAdd">
+                    <img class="action-icon" src="/assets/icons/silk-svg/Wrench.svg">
+                    <span>Add Maintenance Log</span>
+                </button> &nbsp; 
+                <button class="action" type="button" id="vehicleMaintenanceClose">
+                    <img class="action-icon" src="/assets/icons/silk-svg/Cancel.svg">
+                    <span>Close</span>
+                </button>
+            </div>
         </div>
     </div>
     <script defer src="/assets/zoomCentre.js"></script>
