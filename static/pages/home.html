@@ -38,8 +38,10 @@
 
 <body>
     <div class="page-content">
-        <span class="bigtext">Home</span>
-        <br>
+        <span class="bigtext">Home</span> &nbsp; 
+        <button class="action" onmousedown="load()">
+            <img class="action-icon" src="/assets/icons/silk-svg/Arrow Rotate CW.svg"><span>Refresh</span>
+        </button><br><br>
         <span>
             <div style="width: fit-content">
                 <center>
@@ -83,7 +85,19 @@
             </d>
         </span>
         <br><br>
-        <span class="mediumtext"></span>
+        <span class="mediumtext">Recent Trips</span><br>
+        <span class="tinytext">Use the trips menu to edit details</span>
+        <table id="tripsTable">
+            <tr>
+                <th>Trip ID</th>
+                <th>Created</th>
+                <th>Status</th>
+                <th>Booking Detail</th>
+                <th>Start</th>
+                <th>End</th>
+                <th>Customer</th>
+            </tr>
+        </table>
     </div>
     <script>
         fetch("/api/v1/misc?homekpi").then(res => {
@@ -98,6 +112,12 @@
                 confirmedPlural.innerText = json.confirmed != 1 ? "s" : ""
                 completedTripCount.innerText = json.completed
                 completedPlural.innerText = json.completed != 1 ? "s" : ""
+            })
+        })
+
+        fetch("/api/v1/trips?created").then(res => {
+            res.json().then(json => {
+                console.log(json)
             })
         })
     </script>

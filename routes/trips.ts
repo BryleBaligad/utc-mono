@@ -72,6 +72,11 @@ export async function tripsGET(req: Bun.BunRequest): Promise<Response> {
         return new Response(count.count)
     }
 
+    if (search.has("created") && (account.role == "admin" || account.role == "manager")) {
+        let trips: any = db.query("SELECT * FROM trips WHERE status = 'CREATED' ORDER BY id DESC").all();
+        return Response.json(trips)
+    }
+
     let limit = "30";
     if (search.has("limit")) {
         limit = search.get("limit") ?? limit
