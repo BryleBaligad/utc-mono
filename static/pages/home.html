@@ -18,7 +18,7 @@
     }
 
     .tinytext {
-        font-size: xx-small;
+        font-size: x-small;
     }
 
     .kepi {
@@ -89,7 +89,7 @@
             </d>
         </span>
         <br><br>
-        <span class="mediumtext">Recent Trips</span><br>
+        <span class="mediumtext">Recent Trips</span>
         <span class="tinytext">Use the trips page to edit details</span>
         <table id="tripsTable">
             <tr>
@@ -104,29 +104,33 @@
         </table>
     </div>
     <script>
-        fetch("/api/v1/misc?homekpi").then(res => {
-            res.json().then(json => {
-                customerAccountCount.innerText = json.customer
-                customerPlural.innerText = json.customer != 1 ? "s" : ""
-                vehicleCount.innerText = json.vehicle
-                vehiclePlural.innerText = json.vehicle != 1 ? "s" : ""
-                uncheckedTripCount.innerText = json.unchecked
-                uncheckedPlural.innerText = json.unchecked != 1 ? "s" : ""
-                confirmedTripCount.innerText = json.confirmed
-                confirmedPlural.innerText = json.confirmed != 1 ? "s" : ""
-                completedTripCount.innerText = json.completed
-                completedPlural.innerText = json.completed != 1 ? "s" : ""
+        function load() {
+            fetch("/api/v1/misc?homekpi").then(res => {
+                res.json().then(json => {
+                    customerAccountCount.innerText = json.customer
+                    customerPlural.innerText = json.customer != 1 ? "s" : ""
+                    vehicleCount.innerText = json.vehicle
+                    vehiclePlural.innerText = json.vehicle != 1 ? "s" : ""
+                    uncheckedTripCount.innerText = json.unchecked
+                    uncheckedPlural.innerText = json.unchecked != 1 ? "s" : ""
+                    confirmedTripCount.innerText = json.confirmed
+                    confirmedPlural.innerText = json.confirmed != 1 ? "s" : ""
+                    completedTripCount.innerText = json.completed
+                    completedPlural.innerText = json.completed != 1 ? "s" : ""
+                })
             })
-        })
+    
+            fetch("/api/v1/trips?created").then(res => {
+                document.querySelectorAll("#tripsTable > :not(:first-child)").forEach(element => element.remove())
 
-        fetch("/api/v1/trips?created").then(res => {
-            res.json().then(async json => {
-                for (let i = 0; i < json.length; i++) {
-                    const trip = json[i];
-                    await addTripsToTableRow(trip.id, trip.created_at, trip.status, trip.booking_type, trip.service_type, trip.service_subtype, trip.start_at, trip.end_at, trip.start_location || "", trip.end_location || "", trip.account_id)
-                }
+                res.json().then(async json => {
+                    for (let i = 0; i < json.length; i++) {
+                        const trip = json[i];
+                        await addTripsToTableRow(trip.id, trip.created_at, trip.status, trip.booking_type, trip.service_type, trip.service_subtype, trip.start_at, trip.end_at, trip.start_location || "", trip.end_location || "", trip.account_id)
+                    }
+                })
             })
-        })
+        }
 
         async function addTripsToTableRow(id, createdAt, status, bookingType, serviceType, serviceSubtype, startAt, endAt, startLocation, endLocation, accountID) {
             let tripsTable = document.getElementById("tripsTable");
