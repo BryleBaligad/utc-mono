@@ -156,6 +156,7 @@
                     <th>Serviced By</th>
                     <th>Action</th>
                 </tr>
+                <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
             </table>
             <div style="display: flex; justify-content: flex-end; width: 100%;">
                 <button class="action" type="button" id="vehicleMaintenanceAddButton">
@@ -335,15 +336,17 @@
             document.querySelector("#vehicleMaintenanceAddButton").setAttribute("onclick", `openVehicleMaintenanceAddMenu(${id})`)
             document.querySelector(".vehicleMaintenanceViewContainer").style.display = "unset";
 
+            let vehicleMaintenanceTable = document.getElementById("vehicleMaintenanceTable");
+
             let json;
             try {
                 json = JSON.parse(data)
             } catch (err) {
+                vehicleMaintenanceTable.innerHTML += "<tr><td>No data</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>"
                 return;
             }
             // there _is_ data
 
-            let vehicleMaintenanceTable = document.getElementById("vehicleMaintenanceTable");
             let tr = document.createElement("tr");
         }
 
