@@ -345,10 +345,9 @@
                 description: formData.get("description")
             })
 
-            let newExtraFields = JSON.stringify(currentFields);
             let res = await fetch(`/api/v1/vehicles/${id}`, {
                 method: "PATCH",
-                body: newExtraFields
+                body: JSON.stringify({ extra_fields: currentFields })
             })
 
             if (res.status == 200) {
