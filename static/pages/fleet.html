@@ -129,7 +129,7 @@
                 Description<br>
                 <textarea id="vehicleMaintenanceDescription" name="description"></textarea>
                 <div style="display: flex; justify-content: flex-end; width: 100%;">
-                    <button class="action" type="button" id="vehicleMaintenanceAddClose" onclick="document.querySelector('.vehicleMaintenanceAddViewContainer').style.display = 'none'">
+                    <button class="action" type="button" id="vehicleMaintenanceAddClose" onmousedown="document.querySelector('.vehicleMaintenanceAddViewContainer').style.display = 'none'">
                         <img class="action-icon" src="/assets/icons/silk-svg/Cancel.svg">
                         <span>Close</span>
                     </button> &nbsp;
@@ -162,7 +162,7 @@
                     <img class="action-icon" src="/assets/icons/silk-svg/Wrench.svg">
                     <span>Add Maintenance Log</span>
                 </button> &nbsp; 
-                <button class="action" type="button" id="vehicleMaintenanceClose" onclick="document.querySelector('.vehicleMaintenanceViewContainer').style.display = 'none'">
+                <button class="action" type="button" id="vehicleMaintenanceClose" onmousedown="document.querySelector('.vehicleMaintenanceViewContainer').style.display = 'none'">
                     <img class="action-icon" src="/assets/icons/silk-svg/Cancel.svg">
                     <span>Close</span>
                 </button>
@@ -362,7 +362,7 @@
 
         function openVehicleMaintenanceMenu(data, id) {
             document.querySelectorAll("#vehicleMaintenanceTable > :not(:first-child)").forEach(element => element.remove())
-            document.querySelector("#vehicleMaintenanceAddButton").setAttribute("onclick", `openVehicleMaintenanceAddMenu(${id})`)
+            document.querySelector("#vehicleMaintenanceAddButton").setAttribute("onmousedown", `openVehicleMaintenanceAddMenu(${id})`)
             document.querySelector(".vehicleMaintenanceViewContainer").style.display = "unset";
 
             let vehicleMaintenanceTable = document.getElementById("vehicleMaintenanceTable");
