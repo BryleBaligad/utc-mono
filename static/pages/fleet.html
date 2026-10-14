@@ -412,7 +412,7 @@
                     let actionsCell = document.createElement("td");
                     let deleteAction = document.createElement("div");
                     deleteAction.className = "action";
-                    deleteAction.onmousedown = () => { deleteVehicleMaintenance(id, index) }
+                    deleteAction.onmousedown = () => { deleteVehicleMaintenance(id, i) }
 
                     let deleteActionIcon = document.createElement("img");
                     deleteActionIcon.className = "action-icon";
@@ -490,6 +490,28 @@
                     load();
                     if (res.status == 204) return alert("Successfully deleted vehicle.")
                     return alert("An error occurred while deleting vehicle.")
+                })
+            }
+        }
+
+        function deleteVehicleMaintenance(id, idx) {
+            if (confirm(`Are you sure you want to delete this maintenance log for vehicle ${id}?`)) {
+                let vehicle = cache.find(x => x.id = id);
+                let currentFields = vehicle.extra_fields;
+                if (!currentFields) {
+                    currentFields = { maintenance: [] }
+                }
+                let maintenance = currentFields.maintenance;
+
+                maintenance.splice(idx, 1);
+
+                fetch(`/api/v1/vehicles/${id}`, {
+                    method: "PATCH",
+                    body: JSON.stringify({ extra_fields: JSON.stringify(currentFields) })
+                }).then(res => {
+                    load();
+                    if (res.status == 200) return alert("Successfully deleted maintenance log.")
+                    return alert("An error occurred while deleting maintenance log.")
                 })
             }
         }
