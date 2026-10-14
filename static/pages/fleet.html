@@ -105,6 +105,33 @@
             </form>
         </div>
     </div>
+    <div class="vehicleMaintenanceAddViewContainer">
+        <div id="vehicleMaintenanceAdd">
+            <form id="vehicleMaintenanceForm" onsubmit="handleVehicleMaintenanceSubmit(); return false;">
+                <img id="vehicleMaintenanceIcon" src="/assets/icons/silk-svg/Wrench.svg" width="24" height="24" style="translate: 0 2.5px"> &nbsp;
+                <span id="vehicleMaintenanceHeader" class="bigtext">Add Maintenance Log</span><br>
+                <span>ID:</span> <input name="id" id="vehicleMaintenanceID" size="5" disabled> &nbsp;
+                Date/Time: <input name="date_time" id="vehicleMaintenanceDateTime" type="datetime-local" required> * &nbsp;<br>
+                Odometer Reading: <input name="odometer" id="vehicleMaintenanceOdometer" size="8" type="number" required> * <br>
+                Maintenance Type: <input name="type" id="vehicleMaintenanceType" size="20" placeholder="Inspection, repair, routine maintenance, etc." required> * &nbsp;
+                Total Cost: <input name="cost" id="vehicleMaintenanceCost" size="8" type="number" required> * &nbsp;
+                Serviced By: <input name="service_by" id="vehicleMaintenanceServicee" size="20" required> * &nbsp;
+                <br><br>
+                Description<br>
+                <textarea id="vehicleMaintenanceDescription" name="note"></textarea>
+                <div style="display: flex; justify-content: flex-end; width: 100%;">
+                    <button class="action" type="button" id="vehicleMaintenanceAddClose">
+                        <img class="action-icon" src="/assets/icons/silk-svg/Cancel.svg">
+                        <span>Close</span>
+                    </button> &nbsp;
+                    <button class="action" type="submit">
+                        <img class="action-icon" src="/assets/icons/silk-svg/Accept.svg">
+                        <span>Submit</span>
+                    </button> &nbsp;
+                </div>
+            </form>
+        </div>
+    </div>
     <div class="vehicleMaintenanceViewContainer">
         <div id="vehicleMaintenanceView">
             <table id="vehicleMaintenanceTable">
