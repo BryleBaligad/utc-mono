@@ -171,7 +171,7 @@
     </div>
     <script defer src="/assets/zoomCentre.js"></script>
     <script>
-        let cache;
+        var cache;
         
         function load() {
             fetch("/api/v1/vehicles").then(async res => {
