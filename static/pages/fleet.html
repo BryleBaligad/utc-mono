@@ -513,11 +513,13 @@
                     method: "PATCH",
                     body: JSON.stringify({ extra_fields: JSON.stringify(currentFields) })
                 }).then(res => {
-                    if (res.status == 200) return alert("Successfully deleted maintenance log.")
+                    if (res.status == 200) {
+                        document.querySelector(".vehicleMaintenanceAddViewContainer").style.display = "none";
+                        document.querySelector(".vehicleMaintenanceViewContainer").style.display = "none";
+                        load();
+                        return alert("Successfully deleted maintenance log.")
+                    }
                     return alert("An error occurred while deleting maintenance log.")
-                    document.querySelector(".vehicleMaintenanceAddViewContainer").style.display = "none";
-                    document.querySelector(".vehicleMaintenanceViewContainer").style.display = "none";
-                    load();
                 })
             }
         }
