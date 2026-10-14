@@ -18,7 +18,7 @@
     }
 
     .kepi {
-        display: grid;
+        display: inline-grid;
         grid-template-columns: 32px auto;
         background-color: beige;
         border: 1px solid lightgray;
@@ -28,7 +28,11 @@
     .kepi img {
         width: 32px;
         height: 32px;
-        padding: 4px;
+        padding: 4px 0 4px 16px;
+    }
+
+    .kepi > span {
+        padding: 4px 0 4px 16px;
     }
 </style>
 
@@ -42,6 +46,13 @@
                 <span>
                     <span id="customerAccountCount">0</span> 
                     Customer Accounts
+                </span>
+            </div>
+            <div class="kepi">
+                <img src="/assets/icons/silk-svg/Car.svg"> 
+                <span>
+                    <span id="vehicleCount">0</span> 
+                    Vehicles
                 </span>
             </div>
         </span>
