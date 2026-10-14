@@ -47,14 +47,14 @@
                         <img src="/assets/icons/silk-svg/User.svg"> 
                         <span>
                             <span id="customerAccountCount">0</span> 
-                            Customer Accounts
+                            Customer Account<span id="customerPlural">s</span>
                         </span>
                     </div>
                     <div class="kepi">
                         <img src="/assets/icons/silk-svg/Car.svg"> 
                         <span>
                             <span id="vehicleCount">0</span> 
-                            Vehicles
+                            Vehicle<span id="vehiclePlural">s</span>
                         </span>
                     </div>
                     <br>
@@ -62,21 +62,21 @@
                         <img src="/assets/icons/silk-svg/Map edit.svg"> 
                         <span>
                             <span id="uncheckedTripCount">0</span> 
-                            Unchecked Trips
+                            Unchecked Trip<span id="uncheckedPlural">s</span>
                         </span>
                     </div>
                     <div class="kepi">
                         <img src="/assets/icons/silk-svg/Map.svg"> 
                         <span>
                             <span id="confirmedTripCount">0</span> 
-                            Confirmed Trips
+                            Confirmed Trip<span id="confirmedPlural">s</span>
                         </span>
                     </div>
                     <div class="kepi">
                         <img src="/assets/icons/silk-svg/Map go.svg"> 
                         <span>
                             <span id="completedTripCount">0</span> 
-                            Completed Trips
+                            Completed Trip<span id="completedPlural">s</span>
                         </span>
                     </div>
                 </center>
@@ -89,10 +89,15 @@
         fetch("/api/v1/misc?homekpi").then(res => {
             res.json().then(json => {
                 customerAccountCount.innerText = json.customer
+                customerPlural.innerText = json.customer != 1 ? "s" : ""
                 vehicleCount.innerText = json.vehicle
+                vehiclePlural.innerText = json.vehicle != 1 ? "s" : ""
                 uncheckedTripCount.innerText = json.unchecked
+                uncheckedPlural.innerText = json.unchecked != 1 ? "s" : ""
                 confirmedTripCount.innerText = json.confirmed
+                confirmedPlural.innerText = json.confirmed != 1 ? "s" : ""
                 completedTripCount.innerText = json.completed
+                completedPlural.innerText = json.completed != 1 ? "s" : ""
             })
         })
     </script>
