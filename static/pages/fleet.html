@@ -31,12 +31,14 @@
         position: absolute;
         padding: 32px;
         top: 94.4px;
+        display: none;
     }
 
     .vehicleMaintenanceAddViewContainer {
         position: absolute;
         padding: 32px;
         top: 94.4px;
+        display: none;
         z-index: 5;
     }
 
@@ -158,7 +160,7 @@
                     <img class="action-icon" src="/assets/icons/silk-svg/Wrench.svg">
                     <span>Add Maintenance Log</span>
                 </button> &nbsp; 
-                <button class="action" type="button" id="vehicleMaintenanceClose">
+                <button class="action" type="button" id="vehicleMaintenanceClose" onclick="document.querySelector('.vehicleMaintenanceViewContainer').style.display = 'none'">
                     <img class="action-icon" src="/assets/icons/silk-svg/Cancel.svg">
                     <span>Close</span>
                 </button>
@@ -179,14 +181,14 @@
                 let json = await res.json();
                 for (let i = 0; i < json.length; i++) {
                     const vehicle = json[i];
-                    addVehiclesToTableRow(vehicle.id, vehicle.plate_number, vehicle.make_model, vehicle.type)
+                    addVehiclesToTableRow(vehicle.id, vehicle.plate_number, vehicle.make_model, vehicle.type, vehicle.extra_fields)
                 }
             })
         }
 
         load()
 
-        function addVehiclesToTableRow(id, plateNumber, makeModel, type) {
+        function addVehiclesToTableRow(id, plateNumber, makeModel, type, extraFields) {
             let vehiclesTable = document.getElementById("vehiclesTable");
             let row = document.createElement("tr");
 
@@ -225,7 +227,7 @@
 
             let viewMaintenanceAction = document.createElement("div");
             viewMaintenanceAction.className = "action";
-            viewMaintenanceAction.onmousedown = () => { openVehicleDetailsWindow(id) }
+            viewMaintenanceAction.onmousedown = () => { openVehicleMaintenanceMenu(extraFields) }
             viewMaintenanceAction.style.display = "block"
 
             let viewMaintenanceActionIcon = document.createElement("img");
@@ -256,7 +258,6 @@
 
             vehiclesTable.append(row);
         }
-
 
         document.getElementById("vehicleDetailClose").onmousedown = () => {
             document.querySelector(".vehicleDetailViewContainer").style.display = "none";
@@ -321,7 +322,32 @@
         }
 
         async function handleVehicleMaintenanceSubmit() {
-            
+            let id = document.getElementById("vehicleMaintenanceID").value;
+            let formData = new FormData(document.getElementById("vehicleMaintenanceForm"));
+
+            console.log(formData)
+        }
+
+        function openVehicleMaintenanceMenu(data) {
+            document.querySelectorAll("#vehicleMaintenanceTable > :not(:first-child)").forEach(element => element.remove())
+            document.querySelector("#vehicleMaintenanceAddButton").setAttribute("onclick", `openVehicleMaintenanceAddMenu(${id})`)
+            document.querySelector(".vehicleMaintenanceViewContainer").style.display = "unset";
+
+            let json;
+            try {
+                json = JSON.parse(data)
+            } catch (err) {
+                return;
+            }
+            // there _is_ data
+
+            let vehicleMaintenanceTable = document.getElementById("vehicleMaintenanceTable");
+            let tr = document.createElement("tr");
+        }
+
+        function openVehicleMaintenanceAddMenu(id) {
+            document.getElementById("vehicleMaintenanceForm").reset()
+            document.getElementById("vehicleMaintenanceID").value = id
         }
 
         function openVehicleCreationWindow() {
