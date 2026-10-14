@@ -86,6 +86,15 @@
         <span class="mediumtext"></span>
     </div>
     <script>
+        fetch("/api/v1/misc?homekpi").then(res => {
+            res.json().then(json => {
+                customerAccountCount.innerText = json.customer
+                vehicleCount.innerText = json.vehicle
+                uncheckedTripCount.innerText = json.unchecked
+                confirmedTripCount.innerText = json.confirmed
+                completedTripCount.innerText = json.completed
+            })
+        })
     </script>
 </body>
 
