@@ -122,12 +122,12 @@
                 <span>ID:</span> <input name="id" id="vehicleMaintenanceID" size="5" disabled> &nbsp;
                 Date/Time: <input name="date_time" id="vehicleMaintenanceDateTime" type="datetime-local" required> * &nbsp;
                 Odometer Reading: <input name="odometer" id="vehicleMaintenanceOdometer" size="8" type="number" required> * <br>
-                Maintenance Type: <input name="type" id="vehicleMaintenanceType" size="20" placeholder="Inspection, repair, routine maintenance, etc." required> * &nbsp;
+                Maintenance Type: <input name="type" id="vehicleMaintenanceType" size="26" placeholder="Routine maintenance, repair, etc." required> * &nbsp;
                 Total Cost: <input name="cost" id="vehicleMaintenanceCost" size="8" type="number" required> * <br>
                 Serviced By: <input name="service_by" id="vehicleMaintenanceServicee" size="20" required> * &nbsp;
                 <br><br>
                 Description<br>
-                <textarea id="vehicleMaintenanceDescription" name="note"></textarea>
+                <textarea id="vehicleMaintenanceDescription" name="description"></textarea>
                 <div style="display: flex; justify-content: flex-end; width: 100%;">
                     <button class="action" type="button" id="vehicleMaintenanceAddClose" onclick="document.querySelector('.vehicleMaintenanceAddViewContainer').style.display = 'none'">
                         <img class="action-icon" src="/assets/icons/silk-svg/Cancel.svg">
@@ -171,6 +171,8 @@
     </div>
     <script defer src="/assets/zoomCentre.js"></script>
     <script>
+        let cache;
+        
         function load() {
             fetch("/api/v1/vehicles").then(async res => {
                 if (res.status == 403) {
@@ -185,6 +187,7 @@
                     const vehicle = json[i];
                     addVehiclesToTableRow(vehicle.id, vehicle.plate_number, vehicle.make_model, vehicle.type, vehicle.extra_fields)
                 }
+                cache = json;
             })
         }
 
@@ -327,7 +330,33 @@
             let id = document.getElementById("vehicleMaintenanceID").value;
             let formData = new FormData(document.getElementById("vehicleMaintenanceForm"));
 
-            console.log(formData)
+            let vehicle = cache.find(x => x.id = id);
+            let currentFields = vehicle.extra_fields;
+            if (!currentFields) {
+                currentFields = { maintenance: [] }
+            }
+            let maintenance = currentFields.maintenance;
+            maintenance.push({
+                date_time: formData.get("date_time"),
+                odometer: formData.get("odometer"),
+                type: formData.get("type"),
+                cost: formData.get("cost"),
+                service_by: formData.get("service_by"),
+                description: formData.get("description")
+            })
+
+            let newExtraFields = JSON.stringify(currentFields);
+            let res = await fetch(`/api/v1/vehicles/${id}`, {
+                method: "PATCH",
+                body: newExtraFields
+            })
+
+            if (res.status == 200) {
+                alert("Successfully added maintenance log")
+                document.querySelector(".vehicleMaintenanceAddViewContainer").style.display = "none";
+                document.querySelector(".vehicleMaintenanceViewContainer").style.display = "none";
+                load()
+            }
         }
 
         function openVehicleMaintenanceMenu(data, id) {
@@ -350,6 +379,8 @@
                 return;
             }
             // there _is_ data
+
+            console.log(json)
 
             let tr = document.createElement("tr");
         }
