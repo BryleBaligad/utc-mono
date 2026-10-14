@@ -132,6 +132,8 @@
             })
         }
 
+        load()
+
         async function addTripsToTableRow(id, createdAt, status, bookingType, serviceType, serviceSubtype, startAt, endAt, startLocation, endLocation, accountID) {
             let tripsTable = document.getElementById("tripsTable");
             let row = document.createElement("tr");
