@@ -347,7 +347,7 @@
 
             let res = await fetch(`/api/v1/vehicles/${id}`, {
                 method: "PATCH",
-                body: JSON.stringify({ extra_fields: currentFields })
+                body: JSON.stringify({ extra_fields: JSON.stringify(currentFields) })
             })
 
             if (res.status == 200) {
