@@ -333,6 +333,8 @@
             let currentFields = vehicle.extra_fields;
             if (!currentFields) {
                 currentFields = { maintenance: [] }
+            } else {
+                currentFields = JSON.parse(vehicle.extra_fields)
             }
             let maintenance = currentFields.maintenance;
             maintenance.push({
@@ -500,6 +502,8 @@
                 let currentFields = vehicle.extra_fields;
                 if (!currentFields) {
                     currentFields = { maintenance: [] }
+                } else {
+                    currentFields = JSON.parse(vehicle.extra_fields)
                 }
                 let maintenance = currentFields.maintenance;
 
