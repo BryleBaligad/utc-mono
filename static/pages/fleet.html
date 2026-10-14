@@ -227,7 +227,7 @@
 
             let viewMaintenanceAction = document.createElement("div");
             viewMaintenanceAction.className = "action";
-            viewMaintenanceAction.onmousedown = () => { openVehicleMaintenanceMenu(extraFields) }
+            viewMaintenanceAction.onmousedown = () => { openVehicleMaintenanceMenu(extraFields, id) }
             viewMaintenanceAction.style.display = "block"
 
             let viewMaintenanceActionIcon = document.createElement("img");
@@ -328,7 +328,7 @@
             console.log(formData)
         }
 
-        function openVehicleMaintenanceMenu(data) {
+        function openVehicleMaintenanceMenu(data, id) {
             document.querySelectorAll("#vehicleMaintenanceTable > :not(:first-child)").forEach(element => element.remove())
             document.querySelector("#vehicleMaintenanceAddButton").setAttribute("onclick", `openVehicleMaintenanceAddMenu(${id})`)
             document.querySelector(".vehicleMaintenanceViewContainer").style.display = "unset";
