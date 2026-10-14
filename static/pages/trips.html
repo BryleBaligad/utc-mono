@@ -411,12 +411,13 @@
             if (!accountID) {
                 accountCell.innerText = "None"
             } else {
-                accountCell.title = accountID
+                accountCell.title = "Account ID " + accountID
                 let customer = await (await fetch(`/api/v1/accounts/${accountID}`)).json()
                 if (customer.account_details) {
                     accountCell.innerText = `${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name}\n${customer.account_details.mobile_number}`;
+                    accountCell.style.textDecoration = "underline dotted"
                 } else {
-                    accountCell.innerText = `Customer ID ${customer.id}`;
+                    accountCell.innerText = `Account ID ${customer.id}`;
                 }
             }
 
