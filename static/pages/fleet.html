@@ -223,6 +223,20 @@
 
             viewEditAction.append(viewEditActionIcon, viewEditActionLabel);
 
+            let viewMaintenanceAction = document.createElement("div");
+            viewMaintenanceAction.className = "action";
+            viewMaintenanceAction.onmousedown = () => { openVehicleDetailsWindow(id) }
+            viewMaintenanceAction.style.display = "block"
+
+            let viewMaintenanceActionIcon = document.createElement("img");
+            viewMaintenanceActionIcon.className = "action-icon";
+            viewMaintenanceActionIcon.src = "/assets/icons/silk-svg/Wrench.svg";
+
+            let viewMaintenanceActionLabel = document.createElement("span");
+            viewMaintenanceActionLabel.innerText = "View Maintenance";
+
+            viewMaintenanceAction.append(viewMaintenanceActionIcon, viewMaintenanceActionLabel);
+
             let deleteAction = document.createElement("div");
             deleteAction.className = "action";
             deleteAction.onmousedown = () => { deleteVehicle(id) }
@@ -236,7 +250,7 @@
 
             deleteAction.append(deleteActionIcon, deleteActionLabel);
 
-            actionsCell.append(viewEditAction, deleteAction);
+            actionsCell.append(viewEditAction, viewMaintenanceAction, deleteAction);
 
             row.append(imageCell, idCell, plateNumberCell, makeModelCell, typeCell, actionsCell);
 
@@ -304,6 +318,10 @@
                     document.querySelector(".vehicleDetailViewContainer").style.display = "none";
                 }
             }
+        }
+
+        async function handleVehicleMaintenanceSubmit() {
+            
         }
 
         function openVehicleCreationWindow() {
