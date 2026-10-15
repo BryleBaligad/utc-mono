@@ -503,8 +503,8 @@
                     newestDate = new Date(currentEndAt.getTime() + 86400000 * 3)
                 }
 
-                if (isNaN(newestDate)) {
-                    console.log("Newest date is borked!")
+                if (newestDate.getTime() > new Date(currentStartAt.getTime() + 86400000 * 10)) {
+                    console.log("Newest date too new!")
                     newestDate = new Date(currentStartAt.getTime() + 86400000 * 3)
                 }
 
