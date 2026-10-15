@@ -104,7 +104,7 @@
                 Passengers: <input name="passenger_count" id="tripPassengerCount" type="number" value="1" min="1" size="4" required> * &nbsp;
                 Flight Number: <input name="flight_number" id="tripFlightNumber" size="6"> <br>
                 Payment Type: <input name="payment_type" id="tripPaymentType" list="paymentType" size="10"> &nbsp; 
-                Payment Status: <select name="payment_status">
+                Payment Status: <select id="tripPaymentStatus" name="payment_status">
                     <option>UNPAID</option>
                     <option>PARTIALLY PAID</option>
                     <option>FULLY PAID</option>
@@ -203,6 +203,7 @@
         </div>
     </div>
     <script>
+        var cache = []
         var currentPage = 0
         async function load(page = currentPage, countPerPage = 10) {
             let pagesDiv = document.getElementById("pages");
@@ -233,6 +234,7 @@
                 document.querySelectorAll("#tripsTable > :not(:first-child)").forEach(element => element.remove())
 
                 let json = await res.json();
+                cache = json;
                 for (let i = 0; i < json.length; i++) {
                     const trip = json[i];
                     await addTripsToTableRow(trip.id, trip.created_at, trip.status, trip.booking_type, trip.service_type, trip.service_subtype, trip.start_at, trip.end_at, trip.start_location || "", trip.end_location || "", trip.account_id, trip.driver_id, trip.vehicle_id)
@@ -242,8 +244,10 @@
 
         load()
 
+        var accountCache
         fetch("/api/v1/accounts").then(async res => {
             let json = await res.json();
+            accountCache = json
             let customers = json.filter(acc => acc.role == "customer")
             let customersList = document.getElementById("customersList")
             for (let i = 0; i < customers.length; i++) {
@@ -273,8 +277,10 @@
             }
         })
 
+        var vehicleCache
         fetch("/api/v1/vehicles").then(async res => {
             let json = await res.json();
+            vehicleCache = json
             let vehiclesList = document.getElementById("vehiclesList")
             for (let i = 0; i < json.length; i++) {
                 const vehicle = json[i];
@@ -706,6 +712,21 @@
             document.getElementById("tripFlightNumber").value = trip.flight_number;
             document.getElementById("tripNote").value = trip.note?.replaceAll("<br>", "\n") ?? "";
 
+            let extraFields;
+            try {
+                extraFields = JSON.parse(trip.extra_fields);
+            } catch (err) {
+                extraFields = {
+                    payment: {}
+                }
+            }
+            if (!extraFields.payment) { extraFields.payment = {} }
+            document.getElementById("tripPaymentType").value = extraFields.payment.type;
+            document.getElementById("tripPaymentStatus").value = extraFields.payment.status;
+            document.getElementById("tripTotalAmount").value = extraFields.payment.amount;
+            document.getElementById("tripAmountPaid").value = extraFields.payment.paid;
+            document.getElementById("tripAmountPaid").oninput()
+
             vehicleScheduleChange()
 
             document.querySelector(".tripDetailViewContainer").style.display = "unset";
@@ -736,6 +757,25 @@
                 if (formData.has("flight_number")) reqJson.flight_number = formData.get("flight_number");
                 if (formData.has("note")) reqJson.note = formData.get("note");
 
+                let extraFields;
+                try {
+                    extraFields = JSON.parse(trip.extra_fields);
+                } catch (err) {
+                    extraFields = {
+                        payment: {}
+                    }
+                }
+                if (!extraFields.payment) { extraFields.payment = {} }
+                if (formData.has("payment_type")) extraFields.payment.type = formData.has("payment_type");
+                if (formData.has("payment_status")) extraFields.payment.status = formData.has("payment_status");
+                if (formData.has("total_amount")) extraFields.payment.amount = formData.has("total_amount");
+                if (formData.has("amount_paid")) extraFields.payment.paid = formData.has("amount_paid");
+                document.getElementById("tripAmountPaid").oninput()
+
+                reqJson.extra_fields = JSON.stringify(extraFields)
+
+                console.log(reqJson)
+
                 let res = await fetch(`/api/v1/trips/${id}`, {
                     method: "PATCH",
                     body: JSON.stringify(reqJson)
@@ -765,6 +805,23 @@
                 if (formData.get("passenger_count") != "") reqJson.passenger_count = formData.get("passenger_count");
                 if (formData.has("flight_number")) reqJson.flight_number = formData.get("flight_number");
                 if (formData.has("note")) reqJson.note = formData.get("note");
+
+                let extraFields;
+                try {
+                    extraFields = JSON.parse(trip.extra_fields);
+                } catch (err) {
+                    extraFields = {
+                        payment: {}
+                    }
+                }
+                if (!extraFields.payment) { extraFields.payment = {} }
+                if (formData.has("payment_type")) extraFields.payment.type = formData.has("payment_type");
+                if (formData.has("payment_status")) extraFields.payment.status = formData.has("payment_status");
+                if (formData.has("total_amount")) extraFields.payment.amount = formData.has("total_amount");
+                if (formData.has("amount_paid")) extraFields.payment.paid = formData.has("amount_paid");
+                document.getElementById("tripAmountPaid").oninput()
+
+                reqJson.extra_fields = JSON.stringify(extraFields)
 
                 console.log(reqJson)
 
