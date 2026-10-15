@@ -103,15 +103,21 @@
                 Luggage: <input name="luggage_count" id="tripLuggageCount" type="number" value="0" min="0" size="4"> &nbsp;
                 Passengers: <input name="passenger_count" id="tripPassengerCount" type="number" value="1" min="1" size="4" required> * &nbsp;
                 Flight Number: <input name="flight_number" id="tripFlightNumber" size="6"> <br>
-                <label for="tripPaid">Fully Paid</label> <input type="checkbox" id="tripPaid" name="paid"> &nbsp; 
-                Total Amount: <input name="total_amount" id="tripTotalAmount" type="number" size="10"> &nbsp; 
                 Payment Type: <input name="payment_type" id="tripPaymentType" list="paymentType" size="10"> &nbsp; 
+                Payment Status: <select name="payment_status">
+                    <option>UNPAID</option>
+                    <option>PARTIALLY PAID</option>
+                    <option>FULLY PAID</option>
+                </select> &nbsp; 
+                Total Amount: <input name="total_amount" id="tripTotalAmount" type="number" size="10"> &nbsp; 
                 <datalist id="paymentType">
                     <option>Cash</option>
                     <option>InstaPay</option>
                     <option>PesoNet</option>
                     <option>Bank Transfer</option>
-                </datalist>
+                </datalist><br>
+                Amount Paid: <input name="amount_paid" id="tripAmountPaid" type="number" size="10"> &nbsp; 
+                Amount Due: <input name="amount_due" id="tripAmountDue" disabled type="number" size="10"> &nbsp; 
                 <br><br>
                 Note<br>
                 <textarea id="tripNote" name="note"></textarea>
@@ -159,7 +165,7 @@
                         </tr>
                     </table>
                 </div>
-                <div>
+                <div style="display: none;">
                     <hr>
                     <span class="mediumtext">Driver Schedule</span> &nbsp; <span><div style="background-color: green; width: 20px; height: 14px; translate: 0 2px; border: 1px solid lightgray; display: inline-block;"></div> Current Trip</span> &nbsp; <span><div style="background-color: red; width: 20px; height: 14px; translate: 0 2px; border: 1px solid lightgray; display: inline-block;"></div> Schedule Conflict</span> &nbsp; <span><div style="background-color: white; width: 20px; height: 14px; translate: 0 2px; border: 1px solid lightgray; display: inline-block;"></div> Other Trips (random color)</span><br>
                     <span id="driverScheduleConflictWarning" style="color: red; display: none;"><b><em>SCHEDULE CONFLICTS WITH EXISTING TRIPS FOR THIS DRIVER!</em></b></span>
@@ -342,85 +348,6 @@
             return `#${f(0)}${f(8)}${f(4)}`;
         }
 
-        async function vehicleScheduleChange() {
-            let currentTripID = document.getElementById("tripID").value;
-            let vehicleID = document.getElementById("tripVehicle").value;
-            let req = await fetch(`/api/v1/trips?vehicleID=${vehicleID}`);
-
-            let trips = await req.json();
-
-            let oldestDate = Number.MAX_VALUE;
-            let newestDate = 0;
-
-            for (let i = 0; i < trips.length; i++) {
-                const trip = trips[i];
-                if (!trip.start_at || !trip.end_at) continue;
-                if (currentTripID == trip.id) continue;
-
-                let startDate = new Date(trip.start_at);
-                let endDate = new Date(trip.end_at);
-
-                if (Date.now() > endDate) {
-                    continue;
-                }
-
-                if (startDate < oldestDate) {
-                    oldestDate = startDate
-                }
-
-                if (endDate > newestDate) {
-                    newestDate = endDate
-                }
-            }
-
-            let currentStartAt = new Date(document.getElementById("tripStartAt").value);
-            let currentEndAt = new Date(document.getElementById("tripEndAt").value);
-
-            if (currentStartAt < oldestDate) {
-                oldestDate = currentStartAt
-            }
-
-            if (currentEndAt > newestDate) {
-                newestDate = currentEndAt
-            }
-
-            if (oldestDate != Number.MAX_VALUE && newestDate != 0) {
-                document.querySelectorAll("#vehicleSchedule > :not(:first-child)").forEach(element => element.remove())
-
-                if (newestDate.getTime() > new Date(currentEndAt.getTime() + 86400000 * 3)) {
-                    console.log("Newest date too new!")
-                    newestDate = new Date(currentEndAt.getTime() + 86400000 * 3)
-                }
-
-                generateVehicleScheduleBetweenDates(oldestDate, newestDate)
-
-                for (let i = 0; i < trips.length; i++) {
-                    const trip = trips[i];
-                    if (!trip.start_at || !trip.end_at) continue;
-                    if (currentTripID == trip.id) continue;
-
-                    let startDate = new Date(trip.start_at);
-                    let endDate = new Date(trip.end_at);
-
-                    if (Date.now() > endDate) {
-                        continue;
-                    }
-
-                    if (currentEndAt.getTime() + 86400000 * 3 < startDate.getTime()) {
-                        continue;
-                    }
-
-                    markVehicleSchedule(new Date(trip.start_at), new Date(trip.end_at), true, generateColour(trip.created_at));
-                }
-            }
-
-            markVehicleSchedule(currentStartAt, currentEndAt, false)
-        }
-
-        document.getElementById("tripStartAt").oninput = vehicleScheduleChange
-        document.getElementById("tripEndAt").oninput = vehicleScheduleChange
-        document.getElementById("tripVehicle").oninput = vehicleScheduleChange
-
         async function addTripsToTableRow(id, createdAt, status, bookingType, serviceType, serviceSubtype, startAt, endAt, startLocation, endLocation, accountID, driverID, vehicleID) {
             let tripsTable = document.getElementById("tripsTable");
             let row = document.createElement("tr");
@@ -518,6 +445,85 @@
             tripsTable.append(row);
         }
 
+        async function vehicleScheduleChange() {
+            let currentTripID = document.getElementById("tripID").value;
+            let vehicleID = document.getElementById("tripVehicle").value;
+            let req = await fetch(`/api/v1/trips?vehicleID=${vehicleID}`);
+
+            let trips = await req.json();
+
+            let oldestDate = Number.MAX_VALUE;
+            let newestDate = 0;
+
+            for (let i = 0; i < trips.length; i++) {
+                const trip = trips[i];
+                if (!trip.start_at || !trip.end_at) continue;
+                if (currentTripID == trip.id) continue;
+
+                let startDate = new Date(trip.start_at);
+                let endDate = new Date(trip.end_at);
+
+                if (Date.now() > endDate) {
+                    continue;
+                }
+
+                if (startDate < oldestDate) {
+                    oldestDate = startDate
+                }
+
+                if (endDate > newestDate) {
+                    newestDate = endDate
+                }
+            }
+
+            let currentStartAt = new Date(document.getElementById("tripStartAt").value);
+            let currentEndAt = new Date(document.getElementById("tripEndAt").value);
+
+            if (currentStartAt < oldestDate) {
+                oldestDate = currentStartAt
+            }
+
+            if (currentEndAt > newestDate) {
+                newestDate = currentEndAt
+            }
+
+            if (oldestDate != Number.MAX_VALUE && newestDate != 0) {
+                document.querySelectorAll("#vehicleSchedule > :not(:first-child)").forEach(element => element.remove())
+
+                if (newestDate.getTime() > new Date(currentEndAt.getTime() + 86400000 * 3)) {
+                    console.log("Newest date too new!")
+                    newestDate = new Date(currentEndAt.getTime() + 86400000 * 3)
+                }
+
+                generateVehicleScheduleBetweenDates(oldestDate, newestDate)
+
+                for (let i = 0; i < trips.length; i++) {
+                    const trip = trips[i];
+                    if (!trip.start_at || !trip.end_at) continue;
+                    if (currentTripID == trip.id) continue;
+
+                    let startDate = new Date(trip.start_at);
+                    let endDate = new Date(trip.end_at);
+
+                    if (Date.now() > endDate) {
+                        continue;
+                    }
+
+                    if (currentEndAt.getTime() + 86400000 * 3 < startDate.getTime()) {
+                        continue;
+                    }
+
+                    markVehicleSchedule(new Date(trip.start_at), new Date(trip.end_at), true, generateColour(trip.created_at));
+                }
+            }
+
+            markVehicleSchedule(currentStartAt, currentEndAt, false)
+        }
+
+        document.getElementById("tripStartAt").oninput = vehicleScheduleChange
+        document.getElementById("tripEndAt").oninput = vehicleScheduleChange
+        document.getElementById("tripVehicle").oninput = vehicleScheduleChange
+
         /**
          * @param {Date} date
          */
@@ -527,14 +533,6 @@
 
             let cell = document.querySelector(`[data-m="${date.getMonth() + 1}"][data-d="${day}"]`);
             if (cell) {
-                // row already exists, clear
-
-                // let cells = document.querySelectorAll(`[data-m="${date.getMonth() + 1}"][data-d="${day}"]`);
-                // cells.forEach(cell => {
-                //     cell.style.backgroundColor = "unset"
-                //     cell.removeAttribute("locked")
-                //     cell.removeAttribute("set")
-                // })
                 return;
             };
 
@@ -576,21 +574,6 @@
             cell.dataset.set = true
         }
 
-        function getHoursBetween(startDate, endDate) {
-            const hours = [];
-            let currentDate = new Date(startDate);
-
-            currentDate.setMinutes(0, 0, 0);
-
-            while (currentDate <= endDate) {
-                hours.push(new Date(currentDate));
-                
-                currentDate.setHours(currentDate.getHours() + 1);
-            }
-
-            return hours;
-        }
-
         /**
          * @param {Date} startDate
          * @param {Date} endDate
@@ -622,6 +605,21 @@
                 let iterDate = new Date(dayBeforeStart.getTime() + (86400000 * i));
                 addVehicleScheduleDay(iterDate)
             }
+        }
+
+        function getHoursBetween(startDate, endDate) {
+            const hours = [];
+            let currentDate = new Date(startDate);
+
+            currentDate.setMinutes(0, 0, 0);
+
+            while (currentDate <= endDate) {
+                hours.push(new Date(currentDate));
+                
+                currentDate.setHours(currentDate.getHours() + 1);
+            }
+
+            return hours;
         }
 
         function formatDateTimeLocalInput(date) {
