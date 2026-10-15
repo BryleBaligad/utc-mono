@@ -765,10 +765,10 @@
                     extraFields = { payment: {} }
                 }
                 if (!extraFields) { extraFields = { payment: {} } }
-                if (formData.has("payment_type")) extraFields.payment.type = formData.has("payment_type");
-                if (formData.has("payment_status")) extraFields.payment.status = formData.has("payment_status");
-                if (formData.has("total_amount")) extraFields.payment.amount = formData.has("total_amount");
-                if (formData.has("amount_paid")) extraFields.payment.paid = formData.has("amount_paid");
+                if (formData.has("payment_type")) extraFields.payment.type = formData.get("payment_type");
+                if (formData.has("payment_status")) extraFields.payment.status = formData.get("payment_status");
+                if (formData.has("total_amount")) extraFields.payment.amount = formData.get("total_amount");
+                if (formData.has("amount_paid")) extraFields.payment.paid = formData.get("amount_paid");
                 onAmountChange()
 
                 reqJson.extra_fields = JSON.stringify(extraFields)
@@ -812,10 +812,10 @@
                     extraFields = { payment: {} }
                 }
                 if (!extraFields) { extraFields = { payment: {} } }
-                if (formData.has("payment_type")) extraFields.payment.type = formData.has("payment_type");
-                if (formData.has("payment_status")) extraFields.payment.status = formData.has("payment_status");
-                if (formData.has("total_amount")) extraFields.payment.amount = formData.has("total_amount");
-                if (formData.has("amount_paid")) extraFields.payment.paid = formData.has("amount_paid");
+                if (formData.has("payment_type")) extraFields.payment.type = formData.get("payment_type");
+                if (formData.has("payment_status")) extraFields.payment.status = formData.get("payment_status");
+                if (formData.has("total_amount")) extraFields.payment.amount = formData.get("total_amount");
+                if (formData.has("amount_paid")) extraFields.payment.paid = formData.get("amount_paid");
                 onAmountChange()
 
                 reqJson.extra_fields = JSON.stringify(extraFields)
