@@ -719,10 +719,10 @@
                 extraFields = { payment: {} }
             }
             if (!extraFields) { extraFields = { payment: {} } }
-            document.getElementById("tripPaymentType").value = extraFields.payment.type;
-            document.getElementById("tripPaymentStatus").value = extraFields.payment.status;
-            document.getElementById("tripTotalAmount").value = extraFields.payment.amount;
-            document.getElementById("tripAmountPaid").value = extraFields.payment.paid;
+            document.getElementById("tripPaymentType").value = extraFields.payment.type ?? "";
+            document.getElementById("tripPaymentStatus").value = extraFields.payment.status ?? "UNPAID";
+            document.getElementById("tripTotalAmount").value = extraFields.payment.amount ?? 0;
+            document.getElementById("tripAmountPaid").value = extraFields.payment.paid ?? 0;
             document.getElementById("tripAmountPaid").oninput()
 
             vehicleScheduleChange()
