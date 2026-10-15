@@ -526,6 +526,10 @@
                         continue;
                     }
 
+                    if (isNaN(currentEndAt)) {
+                        continue;
+                    }
+
                     markVehicleSchedule(new Date(trip.start_at), new Date(trip.end_at), true, generateColour(trip.created_at));
                 }
             }
