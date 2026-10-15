@@ -522,11 +522,11 @@
                         continue;
                     }
 
-                    if (currentEndAt.getTime() + 86400000 * 3 < startDate.getTime()) {
-                        continue;
+                    if (isNaN(currentEndAt)) {
+                        currentEndAt = new Date(currentStartAt.getTime() + 86400000 * 3)
                     }
 
-                    if (isNaN(currentEndAt)) {
+                    if (currentEndAt.getTime() + 86400000 * 3 < startDate.getTime()) {
                         continue;
                     }
 
