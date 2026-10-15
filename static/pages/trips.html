@@ -327,13 +327,16 @@
             }
         }
 
-        document.getElementById("tripAmountPaid").oninput = () => {
+        function onAmountChange() {
             let totalAmount = document.getElementById("tripTotalAmount").value ?? 0
             let amountPaid = document.getElementById("tripAmountPaid").value ?? 0
             let amountDueElement = document.getElementById("tripAmountDue")
 
             amountDueElement.value = `₱${(totalAmount - amountPaid).toFixed(2)}`
         }
+
+        document.getElementById("tripAmountPaid").oninput = onAmountChange
+        document.getElementById("tripTotalAmount").oninput = onAmountChange
 
         function generateColour(seed) {
             let hash = 0;
@@ -723,7 +726,7 @@
             document.getElementById("tripPaymentStatus").value = extraFields.payment.status ?? "UNPAID";
             document.getElementById("tripTotalAmount").value = extraFields.payment.amount ?? 0;
             document.getElementById("tripAmountPaid").value = extraFields.payment.paid ?? 0;
-            document.getElementById("tripAmountPaid").oninput()
+            onAmountChange()
 
             vehicleScheduleChange()
 
@@ -766,7 +769,7 @@
                 if (formData.has("payment_status")) extraFields.payment.status = formData.has("payment_status");
                 if (formData.has("total_amount")) extraFields.payment.amount = formData.has("total_amount");
                 if (formData.has("amount_paid")) extraFields.payment.paid = formData.has("amount_paid");
-                document.getElementById("tripAmountPaid").oninput()
+                onAmountChange()
 
                 reqJson.extra_fields = JSON.stringify(extraFields)
 
@@ -813,7 +816,7 @@
                 if (formData.has("payment_status")) extraFields.payment.status = formData.has("payment_status");
                 if (formData.has("total_amount")) extraFields.payment.amount = formData.has("total_amount");
                 if (formData.has("amount_paid")) extraFields.payment.paid = formData.has("amount_paid");
-                document.getElementById("tripAmountPaid").oninput()
+                onAmountChange()
 
                 reqJson.extra_fields = JSON.stringify(extraFields)
 
