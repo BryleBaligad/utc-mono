@@ -117,7 +117,7 @@
                     <option>Bank Transfer</option>
                 </datalist><br>
                 Amount Paid: <input name="amount_paid" id="tripAmountPaid" type="number" size="10"> &nbsp; 
-                Amount Due: <input name="amount_due" id="tripAmountDue" disabled type="number" size="10"> &nbsp; 
+                Amount Due: <input name="amount_due" id="tripAmountDue" size="10"> &nbsp; 
                 <br><br>
                 Note<br>
                 <textarea id="tripNote" name="note"></textarea>
@@ -321,6 +321,14 @@
             }
         }
 
+        document.getElementById("tripAmountPaid").oninput = () => {
+            let totalAmount = document.getElementById("tripTotalAmount").value ?? 0
+            let amountPaid = document.getElementById("tripAmountPaid").value ?? 0
+            let amountDueElement = document.getElementById("tripAmountDue")
+
+            amountDueElement.value = `₱${(totalAmount - amountPaid).toFixed(2)}`
+        }
+
         function generateColour(seed) {
             let hash = 0;
             for (let i = 0; i < seed.length; i++) {
@@ -484,7 +492,7 @@
             }
 
             if (currentEndAt > newestDate) {
-                newestDate = currentEndAt
+                newestDate = currentEndAt || currentStartAt
             }
 
             if (oldestDate != Number.MAX_VALUE && newestDate != 0) {
