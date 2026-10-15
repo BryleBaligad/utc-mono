@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UTC | Umali Tours Corporation — Aklan & Panay Island Tourist Transport & Vehicle Rentals</title>
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet" />
+  <!-- Tailwind CSS CDN for responsive utility support alongside custom CSS3 architecture -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      /* Backgrounds & Surfaces */
+      --bg-page: #F8FAFC;
+      --bg-surface: #FFFFFF;
+      --bg-subtle: #F1F5F9;
+      --bg-sky-tint: #F0F9FF;
+
+      /* Typography & Contrast */
+      --text-primary: #0F172A;
+      --text-secondary: #475569;
+      --text-muted: #64748B;
+
+      /* Primary Brand Accent (UTC Cyan/Sky Blue) */
+      --brand-primary: #0099E5;
+      --brand-primary-hover: #007AB8;
+      --brand-primary-light: #E0F2FE;
+      --brand-primary-focus: rgba(0, 153, 229, 0.18);
+
+      /* Semantic Traffic Light Status Accents */
+      --status-green: #10B981;
+      --status-green-bg: #ECFDF5;
+      --status-green-border: #A7F3D0;
+
+      --status-amber: #F59E0B;
+      --status-amber-bg: #FFFBEB;
+      --status-amber-border: #FDE68A;
+
+      --status-red: #EF4444;
+      --status-red-bg: #FEF2F2;
+      --status-red-border: #FECACA;
+
+      /* Borders, Shadows & Radii */
+      --border-light: #E2E8F0;
+      --border-hover: #CBD5E1;
+      --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+      --shadow-sm: 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+      --shadow-md: 0 12px 24px -4px rgba(15, 23, 42, 0.08);
+      --shadow-lg: 0 20px 32px -8px rgba(15, 23, 42, 0.12);
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-pill: 9999px;
+      --transition-fast: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      color: var(--text-primary);
+      background-color: var(--bg-page);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, .font-heading {
+      font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    /* SPA View Switching */
+    .spa-view {
+      display: none;
+      animation: fadeInView 0.28s ease-out forwards;
+    }
+    .spa-view.active {
+      display: block;
+    }
+
+    @keyframes fadeInView {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Custom Minimalist Form Controls */
+    .utc-input,
+    .utc-select,
+    .utc-textarea {
+      width: 100%;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 0.675rem 0.875rem;
+      font-size: 0.925rem;
+      color: var(--text-primary);
+      transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+      outline: none;
+    }
+
+    .utc-input:hover,
+    .utc-select:hover,
+    .utc-textarea:hover {
+      border-color: var(--border-hover);
+    }
+
+    .utc-input:focus,
+    .utc-select:focus,
+    .utc-textarea:focus {
+      border-color: var(--brand-primary);
+      box-shadow: 0 0 0 3px var(--brand-primary-focus);
+    }
+
+    .utc-label {
+      display: block;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 0.375rem;
+    }
+
+    .btn-primary {
+      background-color: var(--brand-primary);
+      color: #FFFFFF;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 1.25rem;
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--brand-primary-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 153, 229, 0.25);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    .btn-secondary {
+      background-color: var(--bg-surface);
+      color: var(--text-primary);
+      font-weight: 600;
+      border: 1px solid var(--border-light);
+      border-radius: var(--radius-sm);
+      padding: 0.7rem 1.25rem;
+      transition: all var(--transition-fast);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--brand-primary);
+      color: var(--brand-primary);
+      background-color: var(--bg-sky-tint);
+    }
+
+    /* Prominent Category Segmented Pill Toggle */
+    .category-toggle-wrapper {
+      background-color: var(--bg-subtle);
+      padding: 0.375rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-light);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.375rem;
+    }
+
+    .category-toggle-btn {
+      padding: 0.85rem 1rem;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .category-toggle-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .category-toggle-btn.active {
+      background-color: var(--brand-primary);
+      color: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(0, 153, 229, 0.24);
+    }
+
+    /* Navigation Link Active Indicator */
+    .nav-link {
+      color: var(--text-secondary);
+      font-weight: 500;
+      font-size: 0.925rem;
+      padding: 0.5rem 0.75rem;
+      border-radius: var(--radius-sm);
+      transition: all var(--transition-fast);
+      cursor: pointer;
+    }
+
+    .nav-link:hover {
+      color: var(--brand-primary);
+      background-color: var(--bg-sky-tint);
+    }
+
+    .nav-link.active {
+      color: var(--brand-primary);
+      font-weight: 600;
+      background-color: var(--brand-primary-light);
+    }
+
+    /* Semantic Status Badges (Traffic Light Motif) */
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.375rem;
+      padding: 0.25rem 0.7rem;
+      border-radius: var(--radius-pill);
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .badge-amber {
+      background-color: var(--status-amber-bg);
+      color: #B45309;
+      border: 1px solid var(--status-amber-border);
+    }
+
+    .badge-green {
+      background-color: var(--status-green-bg);
+      color: #047857;
+      border: 1px solid var(--status-green-border);
+    }
+
+    .badge-red {
+      background-color: var(--status-red-bg);
+      color: #B91C1C;
+      border: 1px solid var(--status-red-border);
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(3px);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    /* Accordion transitions */
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.28s ease, padding 0.28s ease;
+    }
+    .faq-item.open .faq-answer {
+      max-height: 360px;
+    }
+    .faq-item.open .faq-chevron {
+      transform: rotate(180deg);
+    }
+
+    /* Toast */
+    .utc-toast {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: var(--text-primary);
+        color: #fff;
+        padding: 12px 20px;
+        border-radius: var(--radius-sm);
+        box-shadow: var(--shadow-lg);
+        font-size: 0.925rem;
+        font-weight: 500;
+        z-index: 200;
+        transform: translateY(100px);
+        opacity: 0;
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .utc-toast.show {
+        transform: translateY(0);
+        opacity: 1;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#F8FAFC] text-[#0F172A]">
+
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      <!-- Brand Logo -->
+      <a href="#home" onclick="UTCApp.navigate('home'); return false;" class="flex items-center gap-3 group focus:outline-none">
+        <img
+          src="logo.jpg"
+          alt="Umali Tours Corporation Logo"
+          class="w-11 h-11 rounded-xl shadow-sm transition-transform group-hover:scale-105 object-cover"
+        />
+        <div class="flex flex-col">
+          <div class="flex items-center gap-2">
+            <span class="font-heading font-extrabold text-lg tracking-tight text-slate-900">UTC</span>
+            <span class="text-slate-300 font-light">|</span>
+            <span class="font-heading font-bold text-sm sm:text-base text-slate-800">Umali Tours Corporation</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-[11px] text-slate-500 font-medium">
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#10B981]"></span>
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#F59E0B]"></span>
+            <span class="inline-block w-1.5 h-1.5 rounded-full bg-[#EF4444]"></span>
+            <span class="ml-0.5">Aklan &amp; Panay Island Transit</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-1" aria-label="Main Navigation">
+        <button type="button" data-nav="home" onclick="UTCApp.navigate('home')" class="nav-link active">Home</button>
+        <button type="button" data-nav="about" onclick="UTCApp.navigate('about')" class="nav-link">About Us</button>
+        <button type="button" data-nav="contact" onclick="UTCApp.navigate('contact')" class="nav-link">Contact Us</button>
+        <button type="button" data-nav="faq" onclick="UTCApp.navigate('faq')" class="nav-link">FAQ</button>
+      </nav>
+
+      <!-- Desktop Right Actions -->
+      <div class="hidden lg:flex items-center gap-2.5">
+        <button
+          type="button"
+          onclick="UTCApp.navigate('book')"
+          data-nav-cta="book"
+          class="btn-primary text-sm py-2.5 px-4 rounded-lg shadow-xs"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+          <span>Book Now</span>
+        </button>
+
+        <!-- Dynamic Auth Container -->
+        <div id="desktop-auth-controls" class="flex items-center gap-2 pl-2 border-l border-slate-200">
+          <!-- Populated dynamically by renderAuthHeader() -->
+        </div>
+      </div>
+
+      <!-- Mobile Menu Trigger -->
+      <div class="flex items-center gap-2 lg:hidden">
+        <button
+          type="button"
+          onclick="UTCApp.navigate('book')"
+          class="btn-primary text-xs py-2 px-3 rounded-lg"
+        >
+          Book Now
+        </button>
+        <button
+          type="button"
+          id="mobile-menu-btn"
+          onclick="UTCApp.toggleMobileMenu()"
+          class="p-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 focus:outline-none"
+          aria-label="Toggle Menu"
+        >
+          <svg id="mobile-menu-icon-open" class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Responsive Mobile Navigation Drawer -->
+    <div id="mobile-menu-drawer" class="hidden lg:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-5 space-y-2 shadow-lg absolute w-full z-40">
+      <div class="grid grid-cols-2 gap-1.5">
+        <button type="button" data-nav="home" onclick="UTCApp.navigate('home'); UTCApp.closeMobileMenu();" class="nav-link text-left">Home</button>
+        <button type="button" data-nav="about" onclick="UTCApp.navigate('about'); UTCApp.closeMobileMenu();" class="nav-link text-left">About Us</button>
+        <button type="button" data-nav="book" onclick="UTCApp.navigate('book'); UTCApp.closeMobileMenu();" class="nav-link text-left font-semibold text-[#0099E5]">Book Now</button>
+        <button type="button" data-nav="contact" onclick="UTCApp.navigate('contact'); UTCApp.closeMobileMenu();" class="nav-link text-left">Contact Us</button>
+        <button type="button" data-nav="faq" onclick="UTCApp.navigate('faq'); UTCApp.closeMobileMenu();" class="nav-link text-left">FAQ</button>
+      </div>
+      <div id="mobile-auth-controls" class="pt-3 border-t border-slate-100 flex flex-wrap items-center gap-2">
+        <!-- Populated dynamically by renderAuthHeader() -->
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <!-- ==========================================
+         VIEW 1: HOME (LANDING PAGE)
+         ========================================== -->
+    <section id="view-home" class="spa-view active">
+      <!-- Minimalist Corporate Hero Section -->
+      <div class="relative overflow-hidden bg-white border-b border-slate-200/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 sm:py-20 lg:py-24">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <!-- Left Column: Copy & Primary CTAs -->
+            <div class="lg:col-span-7 space-y-6">
+              <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sky-50 border border-sky-200/80 text-[#0099E5] text-xs font-semibold tracking-wide uppercase">
+                <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
+                <span>Aklan &amp; Panay Island's Trusted Transit Partner</span>
+              </div>
+
+              <h1 class="font-heading text-3xl sm:text-5xl font-extrabold text-slate-900 leading-[1.15]">
+                Reliable Tourist Transport &amp; Vehicle Rentals Across <span class="text-[#0099E5]">Panay Island</span>
+              </h1>
+
+              <p class="text-base sm:text-lg text-slate-600 leading-relaxed max-w-2xl">
+                Seamless, punctual, and comfortable travel connecting <strong>Kalibo</strong>, <strong>Caticlan &amp; Boracay</strong>, <strong>Iloilo</strong>, <strong>Antique</strong>, and <strong>Capiz</strong>. Book your airport transfer or private charter in seconds and finalize directly with our dispatch team on Facebook Messenger.
+              </p>
+
+              <!-- Primary & Quick-Mode CTAs -->
+              <div class="pt-2 flex flex-wrap items-center gap-3">
+                <button
+                  type="button"
+                  onclick="UTCApp.openBookingWithPreset('Tourist Transportation', 'Airport Transfer (Kalibo ↔ Caticlan)')"
+                  class="btn-primary text-base px-6 py-3.5 rounded-xl shadow-sm"
+                >
+                  <span>Book a Ride</span>
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </button>
+
+                <button
+                  type="button"
+                  onclick="UTCApp.openBookingWithPreset('Tourist Transportation')"
+                  class="btn-secondary text-sm px-4 py-3.5 rounded-xl"
+                >
+                  <svg class="w-4 h-4 text-[#0099E5]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                  <span>Tourist Transport</span>
+                </button>
+
+                <button
+                  type="button"
+                  onclick="UTCApp.openBookingWithPreset('Vehicle Rentals')"
+                  class="btn-secondary text-sm px-4 py-3.5 rounded-xl"
+                >
+                  <svg class="w-4 h-4 text-[#0099E5]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l2-5a2 2 0 012-1.5h6a2 2 0 012 1.5l2 5M4 17a2 2 0 002 2h12a2 2 0 002-2v-4H4v4zm3-3h.01M17 14h.01" />
+                  </svg>
+                  <span>Vehicle Rentals</span>
+                </button>
+              </div>
+
+              <!-- Trust Micro-Metrics -->
+              <div class="pt-4 grid grid-cols-3 gap-4 border-t border-slate-100 max-w-lg">
+                <div>
+                  <p class="font-heading font-bold text-lg text-slate-900">24/7 Dispatch</p>
+                  <p class="text-xs text-slate-500">Flight-synced pickups</p>
+                </div>
+                <div>
+                  <p class="font-heading font-bold text-lg text-slate-900">5 Provinces</p>
+                  <p class="text-xs text-slate-500">Panay wide</p>
+                </div>
+                <div>
+                  <p class="font-heading font-bold text-lg text-slate-900">Direct Rates</p>
+                  <p class="text-xs text-slate-500">Messenger negotiation</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="lg:col-span-5">
+              <div class="bg-[#F8FAFC] border border-slate-200/90 rounded-2xl p-6 sm:p-7 shadow-sm space-y-5">
+                <div class="flex items-center justify-between border-b border-slate-200 pb-4">
+                  <div>
+                    <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Our Services</span>
+                    <h2 class="font-heading font-bold text-lg text-slate-900 mt-0.5">What We Offer</h2>
+                  </div>
+                  <span class="badge-status badge-green">
+                    <span class="w-2 h-2 rounded-full bg-[#10B981]"></span>
+                    Available 24/7
+                  </span>
+                </div>
+
+                <!-- Route Cards Preview -->
+                <div class="space-y-3">
+                  <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-lg bg-sky-50 text-[#0099E5] flex items-center justify-center font-bold text-xs">KLO</div>
+                      <div>
+                        <p class="text-sm font-semibold text-slate-900">Kalibo Int'l Airport ↔ Caticlan Port</p>
+                        <p class="text-xs text-slate-500">Approx. 1.5 – 2 hrs • Vans, Coasters &amp; Sedans</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="UTCApp.openBookingWithPreset('Tourist Transportation', 'Airport Transfer (Kalibo ↔ Caticlan)')"
+                      class="text-xs font-semibold text-[#0099E5] hover:underline"
+                    >
+                      Select →
+                    </button>
+                  </div>
+
+                  <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-lg bg-sky-50 text-[#0099E5] flex items-center justify-center font-bold text-xs">MPH</div>
+                      <div>
+                        <p class="text-sm font-semibold text-slate-900">Caticlan / Boracay ↔ Iloilo / Antique</p>
+                        <p class="text-xs text-slate-500">Point-to-Point Private Transfers &amp; Tours</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="UTCApp.openBookingWithPreset('Tourist Transportation', 'Point-to-Point Transfer')"
+                      class="text-xs font-semibold text-[#0099E5] hover:underline"
+                    >
+                      Select →
+                    </button>
+                  </div>
+
+                  <div class="bg-white p-3.5 rounded-xl border border-slate-200/80 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                      <div class="w-9 h-9 rounded-lg bg-sky-50 text-[#0099E5] flex items-center justify-center font-bold text-xs">VAN</div>
+                      <div>
+                        <p class="text-sm font-semibold text-slate-900">Chauffeur-Driven Van &amp; Bridal Charters</p>
+                        <p class="text-xs text-slate-500">Half-Day, Full-Day &amp; Multi-Day Panay Charters</p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="UTCApp.openBookingWithPreset('Vehicle Rentals', 'Van Rental (with Driver)')"
+                      class="text-xs font-semibold text-[#0099E5] hover:underline"
+                    >
+                      Select →
+                    </button>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#0099E5]">Core Fleet &amp; Transit Solutions</span>
+            <h2 class="font-heading text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Tailored Services Across Panay Island</h2>
+          </div>
+          <p class="text-sm text-slate-600 max-w-md">
+            Choose between scheduled point-to-point tourist transportation or dedicated vehicle rentals with professional local drivers.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Service Card 1: Airport Transfers -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#0099E5] flex items-center justify-center mb-5">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </div>
+              <span class="inline-block text-[11px] font-semibold uppercase tracking-wider text-[#0099E5] bg-sky-50 px-2.5 py-0.5 rounded-md mb-2">Tourist Transportation</span>
+              <h3 class="font-heading font-bold text-lg text-slate-900 mb-2">Airport Transfers</h3>
+              <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                Direct, flight-monitored transfers between <strong>Kalibo International Airport (KLO)</strong>, <strong>Caticlan Airport (MPH)</strong>, Jetty Port, and Iloilo Airport.
+              </p>
+            </div>
+            <button
+              type="button"
+              onclick="UTCApp.openBookingWithPreset('Tourist Transportation', 'Airport Transfer (Kalibo ↔ Caticlan)')"
+              class="w-full btn-secondary text-xs py-2.5 rounded-lg"
+            >
+              Book Airport Transfer →
+            </button>
+          </div>
+
+          <!-- Service Card 2: Regional Tourist Transport -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#0099E5] flex items-center justify-center mb-5">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <span class="inline-block text-[11px] font-semibold uppercase tracking-wider text-[#0099E5] bg-sky-50 px-2.5 py-0.5 rounded-md mb-2">Tourist Transportation</span>
+              <h3 class="font-heading font-bold text-lg text-slate-900 mb-2">Regional Tourist Transport</h3>
+              <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                Seamless point-to-point transfers and curated day tours connecting Aklan, Antique, Capiz, and Iloilo destinations.
+              </p>
+            </div>
+            <button
+              type="button"
+              onclick="UTCApp.openBookingWithPreset('Tourist Transportation', 'Panay Island Tour')"
+              class="w-full btn-secondary text-xs py-2.5 rounded-lg"
+            >
+              Book Regional Transit →
+            </button>
+          </div>
+
+          <!-- Service Card 3: Van & Car Rentals -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#0099E5] flex items-center justify-center mb-5">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 7h8m-8 5h8m-4 5v-5m-8 6h16a2 2 0 002-2V6a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <span class="inline-block text-[11px] font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md mb-2">Vehicle Rentals</span>
+              <h3 class="font-heading font-bold text-lg text-slate-900 mb-2">Van &amp; Car Rentals</h3>
+              <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                Spacious commuter vans (Toyota Hiace Grandia/Commuter) and executive sedans with experienced drivers for family outings or corporate travel.
+              </p>
+            </div>
+            <button
+              type="button"
+              onclick="UTCApp.openBookingWithPreset('Vehicle Rentals', 'Van Rental (with Driver)')"
+              class="w-full btn-secondary text-xs py-2.5 rounded-lg"
+            >
+              Rent a Van or Car →
+            </button>
+          </div>
+
+          <!-- Service Card 4: Bridal Cars & Taxi Services -->
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-6 shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
+            <div>
+              <div class="w-11 h-11 rounded-xl bg-sky-50 text-[#0099E5] flex items-center justify-center mb-5">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+              </div>
+              <span class="inline-block text-[11px] font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-md mb-2">Vehicle Rentals</span>
+              <h3 class="font-heading font-bold text-lg text-slate-900 mb-2">Bridal Cars &amp; Taxi Services</h3>
+              <p class="text-sm text-slate-600 leading-relaxed mb-6">
+                Immaculate wedding entourage vehicles and dedicated white taxi charters for special events, VIP guests, and flexible city errands.
+              </p>
+            </div>
+            <button
+              type="button"
+              onclick="UTCApp.openBookingWithPreset('Vehicle Rentals', 'Bridal Car Service')"
+              class="w-full btn-secondary text-xs py-2.5 rounded-lg"
+            >
+              Book Special Charter →
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white border-t border-slate-200/80 py-16 sm:py-20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center max-w-2xl mx-auto mb-12">
+            <span class="text-xs font-bold uppercase tracking-wider text-[#0099E5]">Simple &amp; Transparent Workflow</span>
+            <h2 class="font-heading text-2xl sm:text-3xl font-bold text-slate-900 mt-1">How Booking with UTC Works</h2>
+            <p class="text-sm text-slate-600 mt-2">
+              No hidden online markups. Submit your exact itinerary here and finalize personalized rates directly with our dispatchers.
+            </p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Step 1 -->
+            <div class="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-200/80 relative">
+              <div class="w-9 h-9 rounded-full bg-[#0099E5] text-white font-heading font-bold text-sm flex items-center justify-center mb-4">
+                1
+              </div>
+              <h3 class="font-heading font-bold text-base text-slate-900 mb-2">Select Service &amp; Fill Details</h3>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Toggle between <strong>Tourist Transportation</strong> or <strong>Vehicle Rentals</strong>, then specify your Panay pick-up point, date, time, and passenger count.
+              </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-200/80 relative">
+              <div class="w-9 h-9 rounded-full bg-[#F59E0B] text-white font-heading font-bold text-sm flex items-center justify-center mb-4">
+                2
+              </div>
+              <h3 class="font-heading font-bold text-base text-slate-900 mb-2">Submit Booking Request</h3>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Receive an instant booking reference ID (e.g., <code class="text-xs bg-white px-1.5 py-0.5 rounded border">UTC-XXXXX</code>) saved to your account while our system dispatches your trip details.
+              </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="bg-[#F8FAFC] rounded-2xl p-6 border border-slate-200/80 relative">
+              <div class="w-9 h-9 rounded-full bg-[#10B981] text-white font-heading font-bold text-sm flex items-center justify-center mb-4">
+                3
+              </div>
+              <h3 class="font-heading font-bold text-base text-slate-900 mb-2">Finalize &amp; Negotiate on Messenger</h3>
+              <p class="text-sm text-slate-600 leading-relaxed">
+                Continue seamlessly on <strong>Facebook Messenger</strong> to negotiate custom group rates, confirm flight numbers, and receive your assigned driver's details.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 2: ABOUT US PAGE
+         ========================================== -->
+    <section id="view-about" class="spa-view">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-14">
+        <!-- Editorial Header -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 p-8 sm:p-12 shadow-xs">
+          <div class="max-w-3xl space-y-5">
+            <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 text-[#0099E5] text-xs font-bold uppercase tracking-wider">
+              About Umali Tours Corporation
+            </span>
+            <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900 leading-tight">
+              Setting the Standard for Safe, Punctual Road Transit Across Aklan &amp; Panay Island
+            </h1>
+            <p class="text-base text-slate-600 leading-relaxed">
+              Founded with a mission to bridge the gateways of Western Visayas, <strong>Umali Tours Corporation (UTC)</strong> has grown into one of Aklan and Panay Island's most trusted transit partners. We specialize in seamless, professional, and comfortable travel experiences.
+            </p>
+            <p class="text-base text-slate-600 leading-relaxed mt-4">
+              Whether you are arriving at Kalibo International Airport, heading to the white sands of Boracay, or embarking on a multi-day provincial tour, our fleet of meticulously maintained vehicles and courteous, experienced drivers guarantee a stress-free journey.
+            </p>
+          </div>
+          
+          <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 pt-10 border-t border-slate-100">
+            <div>
+              <p class="font-heading font-extrabold text-3xl text-[#0099E5]">50+</p>
+              <p class="text-sm font-semibold text-slate-900 mt-1">Fleet Vehicles</p>
+              <p class="text-xs text-slate-500 mt-0.5">Vans, Sedans, Coasters</p>
+            </div>
+            <div>
+              <p class="font-heading font-extrabold text-3xl text-[#0099E5]">5</p>
+              <p class="text-sm font-semibold text-slate-900 mt-1">Provinces</p>
+              <p class="text-xs text-slate-500 mt-0.5">Full Panay Coverage</p>
+            </div>
+            <div>
+              <p class="font-heading font-extrabold text-3xl text-[#0099E5]">10k+</p>
+              <p class="text-sm font-semibold text-slate-900 mt-1">Happy Passengers</p>
+              <p class="text-xs text-slate-500 mt-0.5">Safely transported yearly</p>
+            </div>
+            <div>
+              <p class="font-heading font-extrabold text-3xl text-[#0099E5]">24/7</p>
+              <p class="text-sm font-semibold text-slate-900 mt-1">Dispatch Support</p>
+              <p class="text-xs text-slate-500 mt-0.5">Always ready to assist</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 3: BOOK NOW
+         ========================================== -->
+    <section id="view-book" class="spa-view">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div class="text-center mb-8">
+          <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900">Book Your Ride</h1>
+          <p class="text-sm text-slate-600 mt-2">Fill out the details below. We'll finalize pricing via Messenger.</p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-8">
+          <!-- Category Segmented Pill Toggle -->
+          <div class="category-toggle-wrapper mb-8" id="booking-category-toggle">
+            <button type="button" class="category-toggle-btn active" data-value="Tourist Transportation" onclick="UTCApp.setBookingCategory('Tourist Transportation')">
+              Tourist Transportation
+            </button>
+            <button type="button" class="category-toggle-btn" data-value="Vehicle Rentals" onclick="UTCApp.setBookingCategory('Vehicle Rentals')">
+              Vehicle Rentals
+            </button>
+          </div>
+
+          <form id="booking-form" onsubmit="UTCApp.submitBooking(event)">
+            <input type="hidden" id="booking-category-input" name="category" value="Tourist Transportation">
+
+            <!-- Dynamic Fields: Tourist Transportation -->
+            <div id="fields-tourist" class="space-y-5 block">
+              <div>
+                <label class="utc-label">Service Type</label>
+                <select name="touristServiceType" id="touristServiceType" class="utc-select">
+                  <option value="AIRPORT TRANSFER">Airport Transfer (Kalibo ↔ Caticlan)</option>
+                  <option value="P2P TRANSFER">Point-to-Point Transfer</option>
+                  <option value="PANAY ISLAND TOUR">Panay Island Tour</option>
+                  <option value="TAXI SERVICE">Taxi Service</option>
+                </select>
+              </div>
+              <div>
+                <label class="utc-label">Trip Type</label>
+                <select name="tripType" id="tripType" class="utc-select" onchange="UTCApp.toggleReturnDate(this.value)">
+                  <option value="ONE WAY">One-Way</option>
+                  <option value="ROUND TRIP">Round-Trip</option>
+                </select>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="utc-label">Pick-up Location</label>
+                  <input type="text" name="touristPickupLocation" class="utc-input" placeholder="e.g. Kalibo Airport">
+                </div>
+                <div>
+                  <label class="utc-label">Drop-off Destination</label>
+                  <input type="text" name="touristDropoffLocation" class="utc-input" placeholder="e.g. Caticlan Jetty Port">
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="utc-label">Pick-up Date</label>
+                  <input type="date" name="touristPickupDate" class="utc-input">
+                </div>
+                <div>
+                  <label class="utc-label">Pick-up Time</label>
+                  <input type="time" name="touristPickupTime" class="utc-input">
+                </div>
+              </div>
+              <div id="return-datetime-group" class="grid grid-cols-1 sm:grid-cols-2 gap-5 hidden">
+                <div>
+                  <label class="utc-label">Return Date</label>
+                  <input type="date" name="returnDate" class="utc-input">
+                </div>
+                <div>
+                  <label class="utc-label">Return Time</label>
+                  <input type="time" name="returnTime" class="utc-input">
+                </div>
+              </div>
+            </div>
+
+            <!-- Dynamic Fields: Vehicle Rentals -->
+            <div id="fields-rental" class="space-y-5 hidden">
+              <div>
+                <label class="utc-label">Service / Vehicle Type</label>
+                <select name="rentalServiceType" id="rentalServiceType" class="utc-select">
+                  <option>Van Rental (with Driver)</option>
+                  <option>Private Car / Sedan Rental</option>
+                  <option>Bridal Car Service</option>
+                  <option>White Taxi Charter</option>
+                </select>
+              </div>
+              <div>
+                <label class="utc-label">Rental Duration</label>
+                <select name="rentalDuration" class="utc-select">
+                  <option>Half Day (4 hrs)</option>
+                  <option>Full Day (8-12 hrs)</option>
+                  <option>Multi-Day Rental</option>
+                </select>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="utc-label">Pick-up Location</label>
+                  <input type="text" name="rentalPickupLocation" class="utc-input" placeholder="e.g. Hotel in Iloilo">
+                </div>
+                <div>
+                  <label class="utc-label">Intended Route / Provinces</label>
+                  <input type="text" name="rentalRoute" class="utc-input" placeholder="e.g. Iloilo to Antique">
+                </div>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                <div>
+                  <label class="utc-label">Pick-up Date</label>
+                  <input type="date" name="rentalPickupDate" class="utc-input">
+                </div>
+                <div>
+                  <label class="utc-label">Pick-up Time</label>
+                  <input type="time" name="rentalPickupTime" class="utc-input">
+                </div>
+              </div>
+            </div>
+
+            <!-- Common Client Info Fields -->
+            <hr class="my-8 border-slate-200">
+            <h3 class="font-heading font-bold text-lg text-slate-900 mb-5">Client Information</h3>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+              <div>
+                <label class="utc-label">First Name</label>
+                <input type="text" name="clientFirstName" id="book-clientFirstName" class="utc-input" required>
+              </div>
+              <div>
+                <label class="utc-label">Middle Name</label>
+                <input type="text" name="clientMiddleName" id="book-clientMiddleName" class="utc-input">
+              </div>
+              <div>
+                <label class="utc-label">Last Name</label>
+                <input type="text" name="clientLastName" id="book-clientLastName" class="utc-input" required>
+              </div>
+              <div>
+                <label class="utc-label">Contact Number</label>
+                <input type="text" name="clientPhone" id="book-clientPhone" class="utc-input" required>
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+              <div>
+                <label class="utc-label">Email Address</label>
+                <input type="email" name="clientEmail" id="book-clientEmail" class="utc-input" required>
+              </div>
+              <div>
+                <label class="utc-label">FB Messenger Name (Optional)</label>
+                <input type="text" name="clientMessenger" class="utc-input" placeholder="To help us find you easily">
+              </div>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-5">
+              <div>
+                <label class="utc-label">Number of Passengers</label>
+                <input type="number" name="passengers" class="utc-input" min="1" required>
+              </div>
+              <div id="luggage-group-wrapper">
+                <label class="utc-label">Luggage Count</label>
+                <input type="number" name="luggage" class="utc-input" min="0">
+              </div>
+            </div>
+            <div class="mb-5">
+              <label class="utc-label">Flight Number (if applicable)</label>
+              <input type="text" name="flightNumber" class="utc-input" placeholder="e.g. PR 213">
+            </div>
+            <div class="mb-8">
+              <label class="utc-label">Special Requests / Notes</label>
+              <textarea name="notes" class="utc-textarea" rows="3" placeholder="Any special requests?"></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary w-full py-3.5 text-base">Book Now</button>
+            <p class="text-xs text-center text-slate-500 mt-4">
+              <em>Note: Your booking will continue on Facebook Messenger to negotiate pricing and finalize trip details.</em>
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 4: CONTACT US
+         ========================================== -->
+    <section id="view-contact" class="spa-view">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div class="text-center mb-10">
+          <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900">Contact Us</h1>
+          <p class="text-sm text-slate-600 mt-2">We are here to assist you 24/7 across Panay Island.</p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-1 gap-8 max-w-4xl mx-auto">
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-8 shadow-sm">
+            <h3 class="font-heading font-bold text-lg text-slate-900 mb-6">Get in Touch</h3>
+            <div class="space-y-4 text-sm text-slate-600">
+              <p><strong class="text-slate-900">Aklan/Panay Dispatch:</strong><br> +63 912 345 6789</p>
+              <p><strong class="text-slate-900">Email:</strong><br> support@umalitours.com</p>
+              <p><strong class="text-slate-900">Facebook:</strong><br> <a href="https://www.facebook.com/umalitourscorporation" target="_blank" class="text-[#0099E5] hover:underline">facebook.com/umalitourscorporation</a></p>
+            </div>
+          </div>
+          
+          <div style="display: none;" class="bg-white rounded-2xl border border-slate-200/90 p-8 shadow-sm">
+            <form onsubmit="event.preventDefault(); UTCApp.showToast('Message sent successfully!'); this.reset();">
+              <div class="space-y-5">
+                <div>
+                  <label class="utc-label">Name</label>
+                  <input type="text" class="utc-input" required>
+                </div>
+                <div>
+                  <label class="utc-label">Email</label>
+                  <input type="email" class="utc-input" required>
+                </div>
+                <div>
+                  <label class="utc-label">Message</label>
+                  <textarea class="utc-textarea" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary w-full">Send Message</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 5: FAQ
+         ========================================== -->
+    <section id="view-faq" class="spa-view">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div class="text-center mb-10">
+          <h1 class="font-heading text-3xl sm:text-4xl font-extrabold text-slate-900">Frequently Asked Questions</h1>
+        </div>
+        
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm divide-y divide-slate-100">
+          <div class="faq-item">
+            <button class="w-full text-left px-6 py-5 flex items-center justify-between focus:outline-none hover:bg-slate-50 transition-colors" onclick="UTCApp.toggleFaq(this)">
+              <span class="font-semibold text-slate-900 text-sm sm:text-base">How does pricing negotiation work on Messenger?</span>
+              <svg class="faq-chevron w-5 h-5 text-slate-400 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div class="faq-answer">
+              <p class="text-sm text-slate-600 pb-5 px-6 leading-relaxed">Once you submit your booking request, our system forwards the details to our Facebook Messenger team. We will reply shortly to confirm availability and negotiate the final price based on your specific requirements.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="w-full text-left px-6 py-5 flex items-center justify-between focus:outline-none hover:bg-slate-50 transition-colors" onclick="UTCApp.toggleFaq(this)">
+              <span class="font-semibold text-slate-900 text-sm sm:text-base">What happens if my flight at Kalibo or Caticlan is delayed?</span>
+              <svg class="faq-chevron w-5 h-5 text-slate-400 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div class="faq-answer">
+              <p class="text-sm text-slate-600 pb-5 px-6 leading-relaxed">Our dispatch team monitors flight statuses. However, please inform us via Messenger as soon as you know of a delay so we can adjust your pick-up time accordingly.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="w-full text-left px-6 py-5 flex items-center justify-between focus:outline-none hover:bg-slate-50 transition-colors" onclick="UTCApp.toggleFaq(this)">
+              <span class="font-semibold text-slate-900 text-sm sm:text-base">Can I modify or cancel my booking?</span>
+              <svg class="faq-chevron w-5 h-5 text-slate-400 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div class="faq-answer">
+              <p class="text-sm text-slate-600 pb-5 px-6 leading-relaxed">Yes, you can modify or cancel pending bookings directly from your 'My Account' page. For confirmed bookings, please message us directly on FB Messenger to make changes.</p>
+            </div>
+          </div>
+          <div class="faq-item">
+            <button class="w-full text-left px-6 py-5 flex items-center justify-between focus:outline-none hover:bg-slate-50 transition-colors" onclick="UTCApp.toggleFaq(this)">
+              <span class="font-semibold text-slate-900 text-sm sm:text-base">Are drivers and fuel included in vehicle rentals?</span>
+              <svg class="faq-chevron w-5 h-5 text-slate-400 transition-transform" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" /></svg>
+            </button>
+            <div class="faq-answer">
+              <p class="text-sm text-slate-600 pb-5 px-6 leading-relaxed">Yes, all our van and car rentals come with professional drivers. Fuel inclusions depend on the rental package and route, which will be finalized during the Messenger negotiation.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 6: AUTH (LOGIN / REGISTER)
+         ========================================== -->
+    <section id="view-auth" class="spa-view">
+      <div class="max-w-md mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 sm:p-8">
+          
+          <div class="category-toggle-wrapper mb-8" id="auth-tabs">
+            <button type="button" class="category-toggle-btn active" data-value="login" onclick="UTCApp.setAuthTab('login')">Sign In</button>
+            <button type="button" class="category-toggle-btn" data-value="register" onclick="UTCApp.setAuthTab('register')">Create Account</button>
+          </div>
+
+          <!-- Login Form -->
+          <form id="form-login" onsubmit="UTCApp.handleLogin(event)" class="block">
+            <div class="space-y-5">
+              <div>
+                <label class="utc-label">Email Address</label>
+                <input type="email" name="email" class="utc-input" required>
+              </div>
+              <div>
+                <label class="utc-label">Password</label>
+                <input type="password" name="password" class="utc-input" required>
+              </div>
+              <button type="submit" class="btn-primary w-full py-3">Sign In</button>
+              <div class="mt-4 p-3 bg-sky-50 border border-sky-100 rounded-lg text-center">
+                <p class="text-xs text-slate-600">
+                  Try logging in with:<br>
+                  Email: <strong>test@umalitours.com</strong><br>
+                  Password: <strong>password</strong>
+                </p>
+              </div>
+            </div>
+          </form>
+
+          <!-- Register Form -->
+          <form id="form-register" onsubmit="UTCApp.handleRegister(event)" class="hidden">
+            <div class="space-y-5">
+              <div>
+                <label class="utc-label">First Name</label>
+                <input type="text" name="first_name" class="utc-input" required>
+              </div>
+              <div>
+                <label class="utc-label">Middle Name</label>
+                <input type="text" name="middle_name" class="utc-input">
+              </div>
+              <div>
+                <label class="utc-label">Last Name</label>
+                <input type="text" name="last_name" class="utc-input" required>
+              </div>
+              <div>
+                <label class="utc-label">Email Address</label>
+                <input type="email" name="email" class="utc-input" required>
+              </div>
+              <div>
+                <label class="utc-label">Mobile Number</label>
+                <input type="text" name="phone" class="utc-input" required>
+              </div>
+              <div>
+                <label class="utc-label">Password</label>
+                <input type="password" name="password" class="utc-input" required>
+              </div>
+              <button type="submit" class="btn-primary w-full py-3">Create Account</button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================
+         VIEW 7: ACCOUNT (PROFILE & BOOKINGS)
+         ========================================== -->
+    <section id="view-account" class="spa-view">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+          <h1 class="font-heading text-2xl sm:text-3xl font-bold text-slate-900">My Account</h1>
+          <button onclick="UTCApp.logout()" class="btn-secondary text-red-600 border-red-200 hover:bg-red-50 hover:border-red-300 text-sm py-2 px-4">Logout</button>
+        </div>
+
+        <!-- Account Tabs -->
+        <div class="category-toggle-wrapper mb-8 max-w-sm" id="account-tabs-wrapper">
+          <button type="button" class="category-toggle-btn active" data-value="profile" onclick="UTCApp.setAccountTab('profile')">Profile</button>
+          <button type="button" class="category-toggle-btn" data-value="bookings" onclick="UTCApp.setAccountTab('bookings')">My Bookings</button>
+        </div>
+
+        <!-- Profile Tab -->
+        <div id="tab-profile" class="block">
+          <div class="bg-white rounded-2xl border border-slate-200/90 p-6 sm:p-8 shadow-sm max-w-3xl">
+            <form id="profile-form" onsubmit="UTCApp.saveProfile(event)">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label class="utc-label">First Name</label>
+                  <input type="text" name="first_name" class="utc-input" required>
+                </div>
+                <div>
+                  <label class="utc-label">Middle Name</label>
+                  <input type="text" name="middle_name" class="utc-input">
+                </div>
+                <div>
+                  <label class="utc-label">Last Name</label>
+                  <input type="text" name="last_name" class="utc-input" required>
+                </div>
+                <div>
+                  <label class="utc-label">Email Address (Read-Only)</label>
+                  <input type="email" name="email" class="utc-input bg-slate-50 text-slate-500" readonly>
+                </div>
+                <div>
+                  <label class="utc-label">Mobile Number</label>
+                  <input type="text" name="phone" class="utc-input" required>
+                </div>
+              </div>
+              <div class="mt-8 pt-6 border-t border-slate-100 flex flex-col-reverse sm:flex-row items-center justify-between gap-4">
+                <button type="button" class="text-sm font-semibold text-red-600 hover:underline" onclick="UTCApp.deleteAccount()">Delete Account</button>
+                <button type="submit" class="btn-primary w-full sm:w-auto px-8">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Bookings Tab -->
+        <div id="tab-bookings" class="hidden">
+          <div class="mb-6">
+            <select id="booking-filter" class="utc-select w-auto min-w-[200px]" onchange="UTCApp.renderBookings()">
+              <option value="All">All Bookings</option>
+              <option value="Tourist Transportation">Tourist Transportation</option>
+              <option value="Vehicle Rentals">Vehicle Rentals</option>
+            </select>
+          </div>
+          
+          <div id="bookings-container" class="space-y-4">
+            <!-- Bookings will be rendered here dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modals -->
+  <div id="edit-booking-modal" class="modal-backdrop">
+    <div class="bg-white w-full max-w-md rounded-2xl border border-slate-200/90 shadow-xl p-6">
+      <div class="flex items-center justify-between mb-5">
+        <h3 class="font-heading font-bold text-xl text-slate-900">Edit Booking Notes</h3>
+        <button type="button" class="text-slate-400 hover:text-slate-600" onclick="UTCApp.closeModal('edit-booking-modal')">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+        </button>
+      </div>
+      <form onsubmit="UTCApp.submitEditBooking(event)">
+        <input type="hidden" id="edit-booking-id">
+        <div class="mb-6">
+          <label class="utc-label">Special Requests / Notes</label>
+          <textarea id="edit-notes" class="utc-textarea" rows="4"></textarea>
+        </div>
+        <div class="flex items-center gap-3 justify-end">
+          <button type="button" class="btn-secondary" onclick="UTCApp.closeModal('edit-booking-modal')">Cancel</button>
+          <button type="submit" class="btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="utc-toast" class="utc-toast">Notification Message</div>
+
+  <!-- App Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
