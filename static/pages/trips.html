@@ -495,12 +495,19 @@
                 newestDate = currentEndAt
             }
 
+            let clearEnd = false;
+
             if (oldestDate != Number.MAX_VALUE && newestDate != 0) {
                 document.querySelectorAll("#vehicleSchedule > :not(:first-child)").forEach(element => element.remove())
 
                 if (newestDate.getTime() > new Date(currentEndAt.getTime() + 86400000 * 3)) {
                     console.log("Newest date too new!")
                     newestDate = new Date(currentEndAt.getTime() + 86400000 * 3)
+                }
+
+                if (newestDate.getTime() > new Date(currentStartAt.getTime() + 86400000 * 10)) {
+                    console.log("Newest date too new!")
+                    newestDate = new Date(currentStartAt.getTime() + 86400000 * 3)
                 }
 
                 generateVehicleScheduleBetweenDates(oldestDate, newestDate)
@@ -517,6 +524,11 @@
                     //     continue;
                     // }
 
+                    if (isNaN(currentEndAt)) {
+                        currentEndAt = new Date(currentStartAt.getTime() + 86400000 * 3)
+                        clearEnd = true;
+                    }
+
                     if (currentEndAt.getTime() + 86400000 * 3 < startDate.getTime()) {
                         continue;
                     }
@@ -527,6 +539,7 @@
                 }
             }
 
+            if (clearEnd) currentEndAt = NaN
             markVehicleSchedule(currentStartAt, currentEndAt, false)
         }
 
