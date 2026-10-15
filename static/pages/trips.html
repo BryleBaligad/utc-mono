@@ -716,11 +716,9 @@
             try {
                 extraFields = JSON.parse(trip.extra_fields);
             } catch (err) {
-                extraFields = {
-                    payment: {}
-                }
+                extraFields = { payment: {} }
             }
-            if (!extraFields.payment) { extraFields.payment = {} }
+            if (!extraFields) { extraFields = { payment: {} } }
             document.getElementById("tripPaymentType").value = extraFields.payment.type;
             document.getElementById("tripPaymentStatus").value = extraFields.payment.status;
             document.getElementById("tripTotalAmount").value = extraFields.payment.amount;
@@ -761,11 +759,9 @@
                 try {
                     extraFields = JSON.parse(trip.extra_fields);
                 } catch (err) {
-                    extraFields = {
-                        payment: {}
-                    }
+                    extraFields = { payment: {} }
                 }
-                if (!extraFields.payment) { extraFields.payment = {} }
+                if (!extraFields) { extraFields = { payment: {} } }
                 if (formData.has("payment_type")) extraFields.payment.type = formData.has("payment_type");
                 if (formData.has("payment_status")) extraFields.payment.status = formData.has("payment_status");
                 if (formData.has("total_amount")) extraFields.payment.amount = formData.has("total_amount");
@@ -810,11 +806,9 @@
                 try {
                     extraFields = JSON.parse(trip.extra_fields);
                 } catch (err) {
-                    extraFields = {
-                        payment: {}
-                    }
+                    extraFields = { payment: {} }
                 }
-                if (!extraFields.payment) { extraFields.payment = {} }
+                if (!extraFields) { extraFields = { payment: {} } }
                 if (formData.has("payment_type")) extraFields.payment.type = formData.has("payment_type");
                 if (formData.has("payment_status")) extraFields.payment.status = formData.has("payment_status");
                 if (formData.has("total_amount")) extraFields.payment.amount = formData.has("total_amount");
