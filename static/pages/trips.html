@@ -492,7 +492,7 @@
             }
 
             if (currentEndAt > newestDate) {
-                newestDate = currentEndAt || currentStartAt
+                newestDate = currentEndAt
             }
 
             if (oldestDate != Number.MAX_VALUE && newestDate != 0) {
@@ -501,6 +501,11 @@
                 if (newestDate.getTime() > new Date(currentEndAt.getTime() + 86400000 * 3)) {
                     console.log("Newest date too new!")
                     newestDate = new Date(currentEndAt.getTime() + 86400000 * 3)
+                }
+
+                if (isNaN(newestDate)) {
+                    console.log("Newest date is borked!")
+                    newestDate = new Date(currentStartAt.getTime() + 86400000 * 3)
                 }
 
                 generateVehicleScheduleBetweenDates(oldestDate, newestDate)
