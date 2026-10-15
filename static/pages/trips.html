@@ -513,9 +513,9 @@
                     let startDate = new Date(trip.start_at);
                     let endDate = new Date(trip.end_at);
 
-                    if (Date.now() > endDate) {
-                        continue;
-                    }
+                    // if (Date.now() > endDate) {
+                    //     continue;
+                    // }
 
                     if (currentEndAt.getTime() + 86400000 * 3 < startDate.getTime()) {
                         continue;
