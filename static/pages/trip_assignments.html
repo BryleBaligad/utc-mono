@@ -162,7 +162,7 @@
                 
                 fetch(`/api/v1/trips/${id}`, {
                     method: "PATCH",
-                    body: reqJson
+                    body: JSON.stringify(reqJson)
                 }).then(res => {
                     if (res.status == 200) {
                         alert("Successfully marked trip as fully paid.")
