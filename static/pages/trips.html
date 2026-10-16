@@ -203,6 +203,10 @@
         </div>
     </div>
     <script>
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
         var cache = []
         var currentPage = 0
         async function load(page = currentPage, countPerPage = 10) {
@@ -223,6 +227,13 @@
                     pageAnchor.onclick = () => { load(i, countPerPage) }
                 }
                 pagesDiv.append(pageAnchor)
+            }
+
+            while (accountCache.length == 0) {
+                await sleep(50)
+            }
+            while (vehicleCache.length == 0) {
+                await sleep(50)
             }
 
             fetch(`/api/v1/trips?limit=${countPerPage}&offset=${page * countPerPage}`).then(async res => {
@@ -399,7 +410,8 @@
                 accountCell.innerText = "None"
             } else {
                 accountCell.title = "Account ID " + accountID
-                let customer = await (await fetch(`/api/v1/accounts/${accountID}`)).json()
+                // let customer = await (await fetch(`/api/v1/accounts/${accountID}`)).json()
+                let customer = accountCache.find(x => x.id == accountID)
                 if (customer.account_details) {
                     accountCell.innerText = `${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name}\n${customer.account_details.mobile_number}`;
                     accountCell.style.textDecoration = "underline dotted"
@@ -412,7 +424,8 @@
             if (!driverID) {
                 driverCell.innerText = "None"
             } else {
-                let driver = await (await fetch(`/api/v1/accounts/${driverID}`)).json()
+                // let driver = await (await fetch(`/api/v1/accounts/${driverID}`)).json()
+                let driver = accountCache.find(x => x.id == driverID)
                 if (driver.account_details) {
                     driverCell.innerText = `${driver.account_details.first_name} ${driver.account_details.middle_name} ${driver.account_details.last_name}`;
                 } else {
@@ -424,7 +437,8 @@
             if (!vehicleID) {
                 vehicleCell.innerText = "None"
             } else {
-                let vehicle = await (await fetch(`/api/v1/vehicles/${vehicleID}`)).json()
+                // let vehicle = await (await fetch(`/api/v1/vehicles/${vehicleID}`)).json()
+                let vehicle = vehicleCache.find(x => x.id == vehicleID)
                 vehicleCell.innerText = `${vehicle.make_model}\n${vehicle.type}, ${vehicle.plate_number}`;
             }
 
