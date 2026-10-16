@@ -370,7 +370,7 @@
             let row = document.createElement("tr");
 
             let idCell = document.createElement("td");
-            idCell.innerText = id;
+            idCell.innerText = `UTC-${trip.id.toString().padStart(5, "0")}`;
 
             let createdAtCell = document.createElement("td");
             createdAtCell.innerText = new Date(parseInt(createdAt)).toLocaleString("sv");

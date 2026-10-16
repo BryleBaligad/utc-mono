@@ -63,7 +63,7 @@
             let row = document.createElement("tr");
 
             let idCell = document.createElement("td");
-            idCell.innerText = id;
+            idCell.innerText = `UTC-${trip.id.toString().padStart(5, "0")}`;
 
             let statusCell = document.createElement("td");
             statusCell.innerText = status;
@@ -108,16 +108,14 @@
             amountDueCell.innerText = "None"
             let amountDue = 0;
             let paymentType = "N/A";
-            console.log(extraFields)
             if (extraFields) {
                 if (typeof extraFields != "object") {
                     extraFields = JSON.parse(extraFields)
                 }
-                console.log(extraFields)
 
                 paymentType = extraFields.payment?.type;
-                if (extraFields.payment?.type.toLowerCase() == "cash") {
-                    amountDue = (parseFloat(extraFields.payment.amount) || 0 - parseFloat(extraFields.payment.paid) || 0)
+                amountDue = (parseFloat(extraFields.payment.amount) || 0 - parseFloat(extraFields.payment.paid) || 0)
+                if (amountDue > 0) {
                     amountDueCell.innerText = `₱${amountDue.toFixed(2)}`
                 }
             }
@@ -125,7 +123,7 @@
             let actionsCell = document.createElement("td");
             let markPaidAction = document.createElement("div");
             markPaidAction.className = "action";
-            markPaidAction.onmousedown = () => { markPaid(id, amountDue, customer, paymentType) }
+            markPaidAction.onmousedown = () => { markPaid(id, amountDue, customer, paymentType, extraFields) }
 
             let markPaidActionIcon = document.createElement("img");
             markPaidActionIcon.className = "action-icon";
@@ -145,9 +143,31 @@
             tripsTable.append(row);
         }
 
-        function markPaid(id, amountDue, customer, paymentType) {
-            if (confirm(`Are you sure you want to mark Trip UTC-${id.toString().padStart(5, "0")} paid?\n\nPlease ensure ${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name} has given you ${amountDue.toFixed(2)} via ${paymentType}`)) {
-                console.log("Abugida")
+        function markPaid(id, amountDue, customer, paymentType, extraFields) {
+            if (confirm(`Are you sure you want to mark Trip UTC-${id.toString().padStart(5, "0")} as paid?\n\nPlease ensure ${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name} has fully paid you ₱${amountDue.toFixed(2)} via ${paymentType}.`)) {
+                if (typeof extraFields != "object") {
+                    extraFields = JSON.parse(extraFields)
+                }
+
+                if (!extraFields.payment) {
+                    extraFields.payment = {}
+                }
+
+                extraFields.payment.status = "FULLY PAID";
+                extraFields.payment.paid = extraFields.payment.amount
+
+                let reqJson = {
+                    extra_fields: JSON.stringify(extraFields)
+                }
+                
+                fetch(`/api/v1/trips/${id}`, {
+                    method: "PATCH",
+                    body: reqJson
+                }).then(res => {
+                    if (res.status == 200) {
+                        alert("Successfully marked trip as fully paid.")
+                    }
+                })
             }
         }
     </script>
