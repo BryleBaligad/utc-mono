@@ -425,7 +425,7 @@
                 vehicleCell.innerText = "None"
             } else {
                 let vehicle = await (await fetch(`/api/v1/vehicles/${vehicleID}`)).json()
-                vehicleCell.innerText = `${vehicle.make_model} (${vehicle.type}, ${vehicle.plate_number})`;
+                vehicleCell.innerText = `${vehicle.make_model}\n${vehicle.type}, ${vehicle.plate_number}`;
             }
 
             let actionsCell = document.createElement("td");

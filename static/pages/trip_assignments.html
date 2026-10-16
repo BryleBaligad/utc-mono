@@ -69,7 +69,7 @@
             statusCell.innerText = status;
             switch (status) {
                 case "NEGOTIATING": statusCell.style.backgroundColor = "#00c3ff"; break;
-                case "ACTIVE": statusCell.style.backgroundColor = "yellow"; break;
+                case "CONFIRMED": statusCell.style.backgroundColor = "yellow"; break;
                 case "COMPLETED": statusCell.style.backgroundColor = "lime"; break;
                 case "CANCELLED": statusCell.style.backgroundColor = "red"; break;
             }
@@ -100,7 +100,7 @@
                 vehicleCell.innerText = "None"
             } else {
                 let vehicle = await (await fetch(`/api/v1/vehicles/${vehicleID}`)).json()
-                vehicleCell.innerText = `${vehicle.make_model} (${vehicle.type}, ${vehicle.plate_number})`;
+                vehicleCell.innerText = `${vehicle.make_model}\n${vehicle.type}, ${vehicle.plate_number}`;
             }
 
             let amountDueCell = document.createElement("td");
