@@ -146,7 +146,7 @@
         }
 
         function markPaid(id, amountDue, customer, paymentType) {
-            if (confirm(`Are you sure you want to mark Trip UTC-${id.padStart(5, "0")} paid?\n\nPlease ensure ${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name} has given you ${amountDue.toFixed(2)} via ${paymentType}`)) {
+            if (confirm(`Are you sure you want to mark Trip UTC-${id.toString().padStart(5, "0")} paid?\n\nPlease ensure ${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name} has given you ${amountDue.toFixed(2)} via ${paymentType}`)) {
                 console.log("Abugida")
             }
         }
