@@ -105,6 +105,8 @@
 
             let amountDueCell = document.createElement("td");
             amountDueCell.innerText = "None"
+            let amountDue = 0;
+            let paymentType = "N/A";
             console.log(extraFields)
             if (extraFields) {
                 if (typeof extraFields != "object") {
@@ -112,43 +114,40 @@
                 }
                 console.log(extraFields)
 
+                paymentType = extraFields.payment?.type;
                 if (extraFields.payment?.type.toLowerCase() == "cash") {
-                    amountDueCell.innerText = `₱${(parseFloat(extraFields.payment.amount) || 0 - parseFloat(extraFields.payment.paid) || 0).toFixed(2)}`
+                    amountDue = (parseFloat(extraFields.payment.amount) || 0 - parseFloat(extraFields.payment.paid) || 0)
+                    amountDueCell.innerText = `₱${amountDue.toFixed(2)}`
                 }
             }
 
             let actionsCell = document.createElement("td");
-            let viewEditAction = document.createElement("div");
-            viewEditAction.className = "action";
-            viewEditAction.onmousedown = () => { openTripDetailsWindow(id) }
+            let markPaidAction = document.createElement("div");
+            markPaidAction.className = "action";
+            markPaidAction.onmousedown = () => { markPaid(id, amountDue, customer, paymentType) }
 
-            let viewEditActionIcon = document.createElement("img");
-            viewEditActionIcon.className = "action-icon";
-            viewEditActionIcon.src = "/assets/icons/silk-svg/Magnifier.svg";
+            let markPaidActionIcon = document.createElement("img");
+            markPaidActionIcon.className = "action-icon";
+            markPaidActionIcon.src = "/assets/icons/silk-svg/Money.svg";
 
-            let viewEditActionLabel = document.createElement("span");
-            viewEditActionLabel.innerText = "View/Edit Details";
+            let markPaidActionLabel = document.createElement("span");
+            markPaidActionLabel.innerText = "Mark Paid";
 
-            viewEditAction.append(viewEditActionIcon, viewEditActionLabel);
+            markPaidAction.append(markPaidActionIcon, markPaidActionLabel);
 
-            let deleteAction = document.createElement("div");
-            deleteAction.className = "action";
-            deleteAction.onmousedown = () => { deleteTrip(id) }
+            if (amountDue > 0) {
+                actionsCell.append(markPaidAction);
+            }
 
-            let deleteActionIcon = document.createElement("img");
-            deleteActionIcon.className = "action-icon";
-            deleteActionIcon.src = "/assets/icons/silk-svg/Delete.svg";
-
-            let deleteActionLabel = document.createElement("span");
-            deleteActionLabel.innerText = "Delete";
-
-            deleteAction.append(deleteActionIcon, deleteActionLabel);
-
-            actionsCell.append(viewEditAction, deleteAction);
-
-            row.append(idCell, statusCell, bookingDetailCell, startDetailCell, endDetailCell, accountCell, vehicleCell, amountDueCell);
+            row.append(idCell, statusCell, bookingDetailCell, startDetailCell, endDetailCell, accountCell, vehicleCell, amountDueCell, actionsCell);
 
             tripsTable.append(row);
+        }
+
+        function markPaid(id, amountDue, customer, paymentType) {
+            if (confirm(`Are you sure you want to mark Trip UTC-${id.padStart(5, "0")} paid?\n\nPlease ensure ${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name} has given you ${amountDue.toFixed(2)} via ${paymentType}`)) {
+                console.log("Abugida")
+            }
         }
     </script>
 </body>
