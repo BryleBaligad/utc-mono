@@ -105,10 +105,12 @@
 
             let amountDueCell = document.createElement("td");
             amountDueCell.innerText = "None"
+            console.log(extraFields)
             if (extraFields) {
                 if (typeof extraFields != "object") {
                     extraFields = JSON.parse(extraFields)
                 }
+                console.log(extraFields)
 
                 if (extraFields.payment?.type.toLowerCase() == "cash") {
                     amountDueCell.innerText = `₱${(extraFields.payment.amount || 0 - extraFields.payment.paid || 0).toFixed(2)}`
