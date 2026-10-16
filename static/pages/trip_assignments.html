@@ -32,6 +32,8 @@
                 <th>End</th>
                 <th>Customer</th>
                 <th>Vehicle</th>
+                <th>Amount Due</th>
+                <th>Actions</th>
             </tr>
         </table>
     </div>
@@ -49,14 +51,14 @@
                 for (let i = 0; i < json.length; i++) {
                     const trip = json[i];
                     console.log(trip)
-                    await addTripsToTableRow(trip.id, trip.status, trip.booking_type, trip.start_at, trip.end_at, trip.start_location || "", trip.end_location || "", trip.service_type, trip.service_subtype, trip.account_id, trip.vehicle_id)
+                    await addTripsToTableRow(trip.id, trip.status, trip.booking_type, trip.start_at, trip.end_at, trip.start_location || "", trip.end_location || "", trip.service_type, trip.service_subtype, trip.account_id, trip.vehicle_id, trip.extra_fields)
                 }
             })
         }
 
         load()
 
-        async function addTripsToTableRow(id, status, bookingType, startAt = "", endAt = "", startLocation = "", endLocation = "", serviceType, serviceSubtype, accountID, vehicleID) {
+        async function addTripsToTableRow(id, status, bookingType, startAt = "", endAt = "", startLocation = "", endLocation = "", serviceType, serviceSubtype, accountID, vehicleID, extraFields) {
             let tripsTable = document.getElementById("tripsTable");
             let row = document.createElement("tr");
 
@@ -101,6 +103,18 @@
                 vehicleCell.innerText = `${vehicle.make_model} (${vehicle.type}, ${vehicle.plate_number})`;
             }
 
+            let amountDueCell = document.createElement("td");
+            amountDueCell.innerText = "None"
+            if (extraFields) {
+                if (typeof extraFields != "object") {
+                    extraFields = JSON.parse(extraFields)
+                }
+
+                if (extraFields.payment?.type.toLowerCase() == "cash") {
+                    amountDueCell.innerText = `₱${(extraFields.payment.amount || 0 - extraFields.payment.paid || 0).toFixed(2)}`
+                }
+            }
+
             let actionsCell = document.createElement("td");
             let viewEditAction = document.createElement("div");
             viewEditAction.className = "action";
@@ -130,7 +144,7 @@
 
             actionsCell.append(viewEditAction, deleteAction);
 
-            row.append(idCell, statusCell, bookingDetailCell, startDetailCell, endDetailCell, accountCell, vehicleCell);
+            row.append(idCell, statusCell, bookingDetailCell, startDetailCell, endDetailCell, accountCell, vehicleCell, amountDueCell);
 
             tripsTable.append(row);
         }
