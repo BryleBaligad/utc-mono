@@ -114,7 +114,7 @@
                 }
 
                 paymentType = extraFields.payment?.type;
-                amountDue = (parseFloat(extraFields.payment.amount) || 0 - parseFloat(extraFields.payment.paid) || 0)
+                amountDue = ((parseFloat(extraFields.payment.amount) || 0) - (parseFloat(extraFields.payment.paid) || 0))
                 if (amountDue > 0) {
                     amountDueCell.innerText = `₱${amountDue.toFixed(2)}`
                 }
