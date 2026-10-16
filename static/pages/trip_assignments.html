@@ -84,10 +84,11 @@
             endDetailCell.innerText = `${endLocation}\n${endAt ? new Date(endAt).toLocaleString("en-US").replace(", ", "\n") : ""}`;
 
             let accountCell = document.createElement("td");
+            let customer;
             if (!accountID) {
                 accountCell.innerText = "None"
             } else {
-                let customer = await (await fetch(`/api/v1/accounts/${accountID}`)).json()
+                customer = await (await fetch(`/api/v1/accounts/${accountID}`)).json()
                 if (customer.account_details) {
                     accountCell.innerText = `${customer.account_details.first_name} ${customer.account_details.middle_name} ${customer.account_details.last_name}\n${customer.account_details.mobile_number}`;
                 } else {
