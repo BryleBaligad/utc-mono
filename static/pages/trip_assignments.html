@@ -113,7 +113,7 @@
                 console.log(extraFields)
 
                 if (extraFields.payment?.type.toLowerCase() == "cash") {
-                    amountDueCell.innerText = `₱${(extraFields.payment.amount || 0 - extraFields.payment.paid || 0).toFixed(2)}`
+                    amountDueCell.innerText = `₱${(parseFloat(extraFields.payment.amount) || 0 - parseFloat(extraFields.payment.paid) || 0).toFixed(2)}`
                 }
             }
 
